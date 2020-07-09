@@ -7,7 +7,7 @@ import Loading from './Loading'
 
 
 // Actions
-// import { handleLogin } from '../../actions/auth'
+import { saveCreditRequest } from '../actions/creditRequest'
 
 class Simulator extends Component {
     state = {
@@ -95,6 +95,7 @@ class Simulator extends Component {
         e.preventDefault()
 
         const { monto, tipoCredito, plazo, nombre } = this.state
+        const { dispatch } = this.props
 
         if (!monto) {
             this.setState({ montoIsInvalid: true })
@@ -108,7 +109,10 @@ class Simulator extends Component {
             return
         }
 
-        // Dispatch save action
+        // 1. API request
+
+        // 2. Dispatch save action
+        dispatch(saveCreditRequest(params))
     }
 
     validateEmail(email) {

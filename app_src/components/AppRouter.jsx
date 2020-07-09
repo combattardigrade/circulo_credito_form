@@ -3,8 +3,8 @@ import { Redirect, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 // Components
-
 import Simulator from './Simulator'
+import Precalificador from './Precalificador'
 
 class AppRouter extends Component {
     render() {
@@ -12,7 +12,8 @@ class AppRouter extends Component {
         console.log(match)
         return (
             <Fragment>                
-                <Route path='/' component={Simulator} exact />
+                <Route path='/simulador' component={Simulator} exact />
+                <Route path='/precalificador' component={Precalificador} /> 
             </Fragment>
         )
     }

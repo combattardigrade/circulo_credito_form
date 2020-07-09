@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
-import loading from './loading'
+import creditRequest from './creditRequest'
 import storage from 'redux-persist/lib/storage'
 
 const appReducer = combineReducers({    
-    loading,
+    creditRequest,
 })
 
 const rootReducer = (state, action) => {    

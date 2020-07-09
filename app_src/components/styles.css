@@ -13,7 +13,7 @@
     font-size: 14px;
     font-family: 'Open Sans', sans-serif;
     font-weight: normal;
-    padding-bottom: 5px;
+    /* padding-bottom: 5px; */
     color: #4c4c4c;
 }
 
@@ -35,6 +35,8 @@
     padding: 10px 40px;
 }
 
-.input-error {
-    
+.form-subtitle {
+    color: #4c4c4c;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
 }
