@@ -3,18 +3,16 @@ import { Redirect, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 // Components
-import Login from './Login'
-import Test from './Test'
+
+import Simulator from './Simulator'
 
 class AppRouter extends Component {
     render() {
         const { match, auth } = this.props
         console.log(match)
         return (
-            <Fragment>
-                <Route path='/' component={Login} exact />
-                <Route path='/test' component={Test} exact />
-
+            <Fragment>                
+                <Route path='/' component={Simulator} exact />
             </Fragment>
         )
     }

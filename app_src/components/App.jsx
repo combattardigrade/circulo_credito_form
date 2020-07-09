@@ -8,6 +8,8 @@ import Loading from './Loading'
 // App Router
 import AppRouter from './AppRouter'
 
+// styles
+import './styles.css'
 
 class App extends Component {
 
