@@ -1,0 +1,6 @@
+{
+    "name": "swaydo",
+    "require": {
+        "apihub-cdc/rc-simulacion-client-php": "^1.0"
+    }
+}
