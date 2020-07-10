@@ -17,7 +17,7 @@ import 'rc-checkbox/assets/index.css'
 
 class Precalificador extends Component {
     state = {
-        formController: 7,
+        formController: 4,
         totalFormSections: 7,
 
         // PART_1
@@ -184,7 +184,7 @@ class Precalificador extends Component {
             this.setState({ montoIsInvalid: false, montoErrorMsg: 'Este campo es obligatorio.' })
         }
 
-        this.setState({ monto: e.target.value })
+        this.setState({ creditAmount: e.target.value })
     }
 
     handlePropertyValueChange = (e) => {
