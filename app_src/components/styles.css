@@ -33,6 +33,15 @@
     background-color: #4c4c4c !important;
     font-size: 16px;
     padding: 10px 40px;
+    
+}
+
+.btn-continue {
+    border: 1px solid #4c4c4c;
+    background-color:white !important;
+    font-size: 16px;
+    padding: 10px 40px;
+   
 }
 
 .form-subtitle {

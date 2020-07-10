@@ -15,7 +15,7 @@ import DatePicker from 'react-date-picker';
 
 class Precalificador extends Component {
     state = {
-        formController: 2,
+        formController: 1,
         totalFormSections: 4,
         // PART_1
         firstName: '',
@@ -176,12 +176,26 @@ class Precalificador extends Component {
         this.setState({ propertyValue: e.target.value })
     }
 
+    handleBackBtn = (e) => {
+        e.preventDefault()
+        const { formController } = this.state
+        if (formController == 1) return
+        this.setState({ formController: formController - 1 })
+    }
+
     handleContinueBtn = (e) => {
+        e.preventDefault()
+        const { formController, totalFormSections } = this.state
+        if (formController === totalFormSections) return
+        this.setState({ formController: formController + 1 })
+    }
+
+    handlesContinueBtn = (e) => {
         e.preventDefault()
 
         const { monto, tipoCredito, plazo, nombre } = this.state
         const { dispatch } = this.props
-
+        console.log('test')
         if (!monto) {
             this.setState({ montoIsInvalid: true })
         }
@@ -282,7 +296,7 @@ class Precalificador extends Component {
                                                     </div>
                                                 </div>
                                                 {
-                                                    this.state.telefono.length > 0 && (
+                                                    this.state.phone.length > 0 && (
                                                         <div className="form-group">
                                                             <label className="form-label">Confirmar Teléfono</label>
                                                             <input value={this.state.confirmPhone} onChange={this.handleConfirmPhoneChange} maxLength="10" type="number" className={this.state.confirnmPhoneIsInvalid ? 'form-control is-invalid' : 'form-control'} />
@@ -461,10 +475,35 @@ class Precalificador extends Component {
                                     }
 
                                 </form>
+                                {
+                                    formController === totalFormSections
+                                        ?
+                                        <div className="text-center " style={{ display: 'flex', justifyContent: 'center' }}>
+                                            <div className="text-center mt-4" style={{ marginRight: '10px' }}>
+                                                <button onClick={this.handleBackBtn} className="btn btn-light btn-continue">Previa</button>
+                                            </div>
+                                            <div className="text-center mt-4">
+                                                <button onClick={this.handleContinueBtn} className="btn btn-dark btn-form">Simular mi crédito</button>
+                                            </div>
+                                        </div>
+                                        :
+                                        formController !== 1
+                                            ?
+                                            <div className="text-center " style={{ display: 'flex', justifyContent: 'center' }}>
+                                                <div className="text-center mt-4" style={{ marginRight: '10px' }}>
+                                                    <button onClick={this.handleBackBtn} className="btn btn-light btn-continue">Previa</button>
+                                                </div>
+                                                <div className="text-center mt-4">
+                                                    <button onClick={this.handleContinueBtn} className="btn btn-light btn-continue">Próxima página</button>
+                                                </div>
+                                            </div>
+                                            :
+                                            <div className="text-center mt-4">
+                                                <button onClick={this.handleContinueBtn} className="btn btn-light btn-continue">Próxima página</button>
+                                            </div>
+                                }
 
-                                <div className="text-center mt-4">
-                                    <button onClick={this.handleContinueBtn} className="btn btn-dark btn-form">Simular mi crédito</button>
-                                </div>
+
                             </div>
                         </div>
                     </div>
