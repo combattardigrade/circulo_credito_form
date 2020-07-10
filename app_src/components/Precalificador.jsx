@@ -15,7 +15,7 @@ import DatePicker from 'react-date-picker';
 
 class Precalificador extends Component {
     state = {
-        formController: 3,
+        formController: 4,
         totalFormSections: 7,
 
         // PART_1
@@ -67,8 +67,10 @@ class Precalificador extends Component {
         creditType: '',
         creditAmount: '',
         propertyValue: '',
+        creditTypeIsInvalid: false,
         creditAmountIsInvalid: false,
         propertyValueIsInvalid: false,
+        creditTypeErrorMsg: 'Este campo es obligatorio.',
         creditAmountErrorMsg: 'Este campo es obligatorio.',
         propertyValueErrorMsg: 'Este campo es obligatorio.',
 
@@ -175,8 +177,30 @@ class Precalificador extends Component {
     handlePostalCodeChange = (e) => this.setState({ postalCode: e.target.value, postalCodeIsInvalid: e.target.value.length > 0 ? false : true })
 
     /* PART_4 */
-    handleCreditTypeChange = (e) => this.setState({ creditType: e.target.value })
-    handleSourceOfResourcesChange = (e) => this.setState({ sourceOfResources: e.target.value })
+    handleCreditTypeChange = (e) => this.setState({ creditType: e.target.value, creditTypeIsInvalid: e.target.value.length > 0 ? false : true })
+
+    handleCreditAmountChange = (e) => {
+        const amount = e.target.value
+        if (amount <= 0) {
+            this.setState({ creditAmountIsInvalid: true, creditAmountErrorMsg: 'Ingresa una cantidad válida' })
+        } else {
+            this.setState({ creditAmountIsInvalid: false, creditAmountErrorMsg: 'Este campo es obligatorio.' })
+        }
+        this.setState({ creditAmount: e.target.value })
+    }
+
+    handlePropertyValueChange = (e) => {
+        const amount = e.target.value
+        if (amount <= 0) {
+            this.setState({ propertyValueIsInvalid: true, propertyValueErrorMsg: 'Ingresa un cantidad válida' })
+        } else {
+            this.setState({ propertyValueIsInvalid: false, propertyValueErrorMsg: 'Este campo es obligatorio.' })
+        }
+        this.setState({ propertyValue: e.target.value })
+    }
+
+    /* PART_5 */
+    handleSourceOfResourcesChange = (e) => this.setState({ sourceOfResources: e.target.value, })
 
     handleVerifiableIncomeChange = (e) => {
         this.setState({ verifiableIncome: e.target.value })
@@ -184,14 +208,6 @@ class Precalificador extends Component {
 
     handleUnverifiableIncomeChange = (e) => {
         this.setState({ unverifiableIncome: e.target.value })
-    }
-
-    handleCreditAmountChange = (e) => {
-        this.setState({ creditAmount: e.target.value })
-    }
-
-    handlePropertyValueChange = (e) => {
-        this.setState({ propertyValue: e.target.value })
     }
 
     handleBackBtn = (e) => {
@@ -208,6 +224,7 @@ class Precalificador extends Component {
             email, phone, confirmPhone, emailIsInvalid, phoneIsInvalid, confirmPhoneIsInvalid,
             firstName, lastName, secondLastName, dateOfBirth, gender, firstNameIsInvalid, lastNameIsInvalid, secondLastNameIsInvalid,
             calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, calleIsInvalid, numeroExtIsInvalid, municipioIsInvalid, postalCodeIsInvalid,
+            creditType, creditAmount, propertyValue, creditTypeIsInvalid, creditAmountIsInvalid, propertyValueIsInvalid,
         } = this.state
 
         if (formController === totalFormSections) return
@@ -237,6 +254,14 @@ class Precalificador extends Component {
             if (!municipio) this.setState({ municipioIsInvalid: true })
             if (!entidadFederativa) this.setState({ entidadFederativaIsInvalid: true })
             if (!postalCode) this.setState({ postalCodeIsInvalid: true })
+            return
+        }
+
+        // Check PART_4
+        if (formController === 4 && (!creditType || !creditAmount || !propertyValue || creditTypeIsInvalid || creditAmountIsInvalid || propertyValueIsInvalid)) {
+            if (!creditType) this.setState({ creditTypeIsInvalid: true })
+            if (!creditAmount) this.setState({ creditAmountIsInvalid: true })
+            if (!propertyValue) this.setState({ propertyValueIsInvalid: true })
             return
         }
 
@@ -497,30 +522,44 @@ class Precalificador extends Component {
                                     {
                                         formController === 4 && (
                                             <Fragment>
-                                                <div className="form-group">
+                                                <div className="form-group mt-4">
                                                     <label className="form-label">Tipo de crédito</label>
-                                                    <select value={this.state.creditType} onChange={this.handleCreditTypeChange} className="form-control">
+                                                    <select value={this.state.creditType} onChange={this.handleCreditTypeChange} className={this.state.creditTypeIsInvalid ? 'form-control is-invalid' : 'form-control'}>
+                                                        <option value="">Seleccionar</option>
                                                         <option value="Compra de Casa">Compra de Casa</option>
                                                         <option value="Construcción">Construcción</option>
                                                         <option value="Remodelación">Remodelación</option>
                                                         <option value="Liquidez">Liquidez</option>
                                                         <option value="Terreno">Terreno</option>
-                                                        <option value="Terreno+Construcción">Terreno+Construcción</option>
+                                                        <option value="Terreno Construcción">Terreno+Construcción</option>
                                                         <option value="Liquidez (Pago a pasivos)">Liquidez (Pago a pasivos)</option>
                                                     </select>
+                                                    <div className="invalid-feedback">
+                                                        {this.state.creditTypeErrorMsg}
+                                                    </div>
                                                 </div>
                                                 <div className="form-group">
                                                     <label className="form-label">Monto de crédito que desea solicitar</label>
-                                                    <input value={this.state.creditAmount} onChange={this.handleCreditAmountChange} type="number" className={this.state.creditAmountIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                    <div className="invalid-feedback">
-                                                        {this.state.creditAmountErrorMsg}
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">MXN</span>
+                                                        </div>
+                                                        <input placeholder="0.0" value={this.state.creditAmount} onChange={this.handleCreditAmountChange} type="number" className={this.state.creditAmountIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                        <div className="invalid-feedback">
+                                                            {this.state.creditAmountErrorMsg}
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div className="form-group">
                                                     <label className="form-label">Valor de la propiedad</label>
-                                                    <input value={this.state.propertyValue} onChange={this.handlePropertyValueChange} type="number" className={this.state.propertyValueIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                    <div className="invalid-feedback">
-                                                        {this.state.propertyValueErrorMsg}
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">MXN</span>
+                                                        </div>
+                                                        <input placeholder="0.0" value={this.state.propertyValue} onChange={this.handlePropertyValueChange} type="number" className={this.state.propertyValueIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                        <div className="invalid-feedback">
+                                                            {this.state.propertyValueErrorMsg}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </Fragment>
