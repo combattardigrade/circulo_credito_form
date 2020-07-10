@@ -276,13 +276,12 @@ class Precalificador extends Component {
 
         // Check PART_5
         if (formController === 5 && (!sourceOfResources || !verifiableIncome || !jobDescription
-            || sourceOfResourcesIsInvalid || verifiableIncomeIsInvalid || unverifiableIncomeIsInvalid || !jobDescriptionIsInvalid)) {
+            || sourceOfResourcesIsInvalid || verifiableIncomeIsInvalid || jobDescriptionIsInvalid)) {
             if (!sourceOfResources) this.setState({ sourceOfResourcesIsInvalid: true })
             if (!verifiableIncome) this.setState({ verifiableIncomeIsInvalid: true })
             if (!jobDescription) this.setState({ jobDescriptionIsInvalid: true })
             return
         }
-
 
         this.setState({ formController: formController + 1 })
     }
