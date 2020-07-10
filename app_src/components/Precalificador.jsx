@@ -9,7 +9,9 @@ import Loading from './Loading'
 import { saveCreditRequest } from '../actions/creditRequest'
 
 // Libraries
-import { Line, Circle } from 'rc-progress';
+import { Line } from 'rc-progress';
+import DatePicker from 'react-date-picker';
+
 
 class Precalificador extends Component {
     state = {
@@ -29,6 +31,7 @@ class Precalificador extends Component {
         telefonoErrorMsg: 'Este campo es obligatorio.',
         rtelefonoErrorMsg: 'Este campo es obligatorio',
         emailErrorMsg: 'Este campo es obligatorio',
+        startDate: new Date(),
         loading: true,
         serverMsg: '',
     }
@@ -122,6 +125,12 @@ class Precalificador extends Component {
         return re.test(String(email).toLowerCase());
     }
 
+    handleChange = date => {
+        this.setState({
+            startDate: date
+        });
+    };
+
     render() {
         const { serverMsg, loading } = this.state
 
@@ -195,6 +204,17 @@ class Precalificador extends Component {
                                         <input value={this.state.telefono} onChange={this.handleTelefonoChange} maxLength="10" type="number" className={this.state.telefonoIsInvalid ? 'form-control is-invalid' : 'form-control'} />
                                         <div className="invalid-feedback">
                                             {this.state.telefonoErrorMsg}
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Fecha de nacimiento</label>
+                                        <div>
+                                            <DatePicker
+                                                onChange={this.handleChange}
+                                                value={this.state.startDate}
+                                                className='datepicker'
+                                            
+                                            />
                                         </div>
                                     </div>
                                     <div className="form-group">
