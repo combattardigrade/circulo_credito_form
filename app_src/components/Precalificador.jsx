@@ -15,7 +15,7 @@ import DatePicker from 'react-date-picker';
 
 class Precalificador extends Component {
     state = {
-        formController: 1,
+        formController: 3,
         totalFormSections: 7,
 
         // PART_1
@@ -24,7 +24,7 @@ class Precalificador extends Component {
         confirmPhone: '',
         emailIsInvalid: false,
         phoneIsInvalid: false,
-        confirnmPhoneIsInvalid: false,
+        confirmPhoneIsInvalid: false,
         emailErrorMsg: 'Este campo es obligatorio.',
         phoneErrorMsg: 'Este campo es obligatorio.',
         confirmPhoneErrorMsg: 'Este campo es obligatorio.',
@@ -33,40 +33,42 @@ class Precalificador extends Component {
         firstName: '',
         secondName: '',
         lastName: '',
-        secondLastName: '',     
+        secondLastName: '',
         dateOfBirth: new Date(),
         gender: 'Hombre',
-        rfc: '',          
+        rfc: '',
         firstNameIsInvalid: false,
         lastNameIsInvalid: false,
-        secondLastNameIsInvalid: false,        
+        secondLastNameIsInvalid: false,
         rfcIsInvalid: false,
         rfcErrorMsg: 'Este campo es obligatorio.',
-        
+
         // PART_3
         calle: '',
         numeroExt: '',
         colonia: '',
         municipio: '',
         entidadFederativa: '',
-        postalCode: '',        
+        postalCode: '',
         calleIsInvalid: false,
         numeroExtIsInvalid: false,
         coloniaIsInvalid: false,
-        municipioIsInvalid: false,       
+        municipioIsInvalid: false,
+        entidadFederativaIsInvalid: false,
+        postalCodeIsInvalid: false,
         calleErrorMsg: 'Este campo es obligatorio.',
         numeroExtErrorMsg: 'Este campo es obligatorio.',
         coloniaErrorMsg: 'Este campo es obligatorio.',
         municipioErrorMsg: 'Este campo es obligatorio.',
         entidadFederativaErrorMsg: ' Este campo es obligatorio',
-        postalCode: 'Este campo es obligatorio.',
+        postalCodeErrorMsg: 'Este campo es obligatorio.',
 
         // PART_4
-        creditType: '',        
+        creditType: '',
         creditAmount: '',
-        propertyValue: '',        
+        propertyValue: '',
         creditAmountIsInvalid: false,
-        propertyValueIsInvalid: false,        
+        propertyValueIsInvalid: false,
         creditAmountErrorMsg: 'Este campo es obligatorio.',
         propertyValueErrorMsg: 'Este campo es obligatorio.',
 
@@ -101,11 +103,6 @@ class Precalificador extends Component {
     }
 
     /* PART_1 */
-    handleFirstNameChange = (e) => this.setState({ firstName: e.target.value })
-    handleSecondNameChange = (e) => this.setState({ secondName: e.target.value })
-    handleLastNameChange = (e) => this.setState({ lastName: e.target.value })
-    handleSecondLastNameChange = (e) => this.setState({ secondLastName: e.target.value })
-
     handleEmailChange = (e) => {
 
         if (!this.validateEmail(e.target.value)) {
@@ -157,6 +154,10 @@ class Precalificador extends Component {
 
 
     /* PART_2 */
+    handleFirstNameChange = (e) => this.setState({ firstName: e.target.value, firstNameIsInvalid: e.target.value.length > 0 ? false : true })
+    handleSecondNameChange = (e) => this.setState({ secondName: e.target.value })
+    handleLastNameChange = (e) => this.setState({ lastName: e.target.value, lastNameIsInvalid: e.target.value.length > 0 ? false : true })
+    handleSecondLastNameChange = (e) => this.setState({ secondLastName: e.target.value, secondLastNameIsInvalid: e.target.value.length > 0 ? false : true })
     handleDateOfBirthChange = (date) => this.setState({ dateOfBirth: date })
     handleGenderChange = (e) => this.setState({ gender: e.target.value })
 
@@ -165,14 +166,15 @@ class Precalificador extends Component {
         this.setState({ rfc: e.target.value })
     }
 
-    handleCalleChange = (e) => this.setState({ calle: e.target.value })
-    handleNumeroExtChange = (e) => this.setState({ numeroExt: e.target.value })
-    handleColoniaChange = (e) => this.setState({ colonia: e.target.value })
-    handleMunicipioChange = (e) => this.setState({ municipio: e.target.value })
-    handleEntidadFederativaChange = (e) => this.setState({ entidadFederative: e.target.value })
-    handlePostalCodeChange = (e) => this.setState({ postalCode: e.target.value })
-
     /* PART_3 */
+    handleCalleChange = (e) => this.setState({ calle: e.target.value, calleIsInvalid: e.target.value.length > 0 ? false : true })
+    handleNumeroExtChange = (e) => this.setState({ numeroExt: e.target.value, numeroExtIsInvalid: e.target.value.length > 0 ? false : true })
+    handleColoniaChange = (e) => this.setState({ colonia: e.target.value, coloniaIsInvalid: e.target.value.length > 0 ? false : true })
+    handleMunicipioChange = (e) => this.setState({ municipio: e.target.value, municipioIsInvalid: e.target.value.length > 0 ? false : true })
+    handleEntidadFederativaChange = (e) => this.setState({ entidadFederativa: e.target.value })
+    handlePostalCodeChange = (e) => this.setState({ postalCode: e.target.value, postalCodeIsInvalid: e.target.value.length > 0 ? false : true })
+
+    /* PART_4 */
     handleCreditTypeChange = (e) => this.setState({ creditType: e.target.value })
     handleSourceOfResourcesChange = (e) => this.setState({ sourceOfResources: e.target.value })
 
@@ -201,8 +203,44 @@ class Precalificador extends Component {
 
     handleContinueBtn = (e) => {
         e.preventDefault()
-        const { formController, totalFormSections } = this.state
+        const {
+            formController, totalFormSections,
+            email, phone, confirmPhone, emailIsInvalid, phoneIsInvalid, confirmPhoneIsInvalid,
+            firstName, lastName, secondLastName, dateOfBirth, gender, firstNameIsInvalid, lastNameIsInvalid, secondLastNameIsInvalid,
+            calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, calleIsInvalid, numeroExtIsInvalid, municipioIsInvalid, postalCodeIsInvalid,
+        } = this.state
+
         if (formController === totalFormSections) return
+
+        // Check PART_1
+        if (formController === 1 && (!email || !phone || !confirmPhone || emailIsInvalid || phoneIsInvalid || confirmPhoneIsInvalid)) {
+            if (!email) this.setState({ emailIsInvalid: true })
+            if (!phone) this.setState({ phoneIsInvalid: true })
+            if (!confirmPhone) this.setState({ confirmPhoneIsInvalid: true })
+            return
+        }
+
+        // Check PART_2
+        if (formController === 2 && (!firstName || !lastName || !secondLastName || !dateOfBirth || !gender || firstNameIsInvalid || lastNameIsInvalid || secondLastNameIsInvalid)) {
+            if (!firstName) this.setState({ firstNameIsInvalid: true })
+            if (!lastName) this.setState({ lastNameIsInvalid: true })
+            if (!secondLastName) this.setState({ secondLastNameIsInvalid: true })
+            return
+        }
+
+        // Check PART_3
+        if (formController === 3 && (!calle || !numeroExt || !colonia || !municipio || !entidadFederativa || !postalCode ||
+            calleIsInvalid || numeroExtIsInvalid || municipioIsInvalid || postalCodeIsInvalid)) {
+            if (!calle) this.setState({ calleIsInvalid: true })
+            if (!numeroExt) this.setState({ numeroExtIsInvalid: true })
+            if (!colonia) this.setState({ coloniaIsInvalid: true })
+            if (!municipio) this.setState({ municipioIsInvalid: true })
+            if (!entidadFederativa) this.setState({ entidadFederativaIsInvalid: true })
+            if (!postalCode) this.setState({ postalCodeIsInvalid: true })
+            return
+        }
+
+
         this.setState({ formController: formController + 1 })
     }
 
@@ -236,7 +274,6 @@ class Precalificador extends Component {
     }
 
 
-
     render() {
         const { formController, totalFormSections, loading } = this.state
         const progress = (formController / totalFormSections * 100).toFixed(1)
@@ -267,21 +304,22 @@ class Precalificador extends Component {
                                     {
                                         formController === 1 && (
                                             <Fragment>
-                                                <div>Descubre en minutos si eres sujeto de crédito y el monto máximo que se puede prestar así como la tasa de interés disponible para tí.</div>
-                                                <div>-Recibirás una Resolución de acuerdo con los datos declarados</div>
-                                                <div>-En caso de estar interesado, podrás continuar el proceso en línea o en las oficinas de SwayDo.mx de tu ciudad, en un proceso presencial.</div>
-                                                <div>-Esta pre-calificación no supone costo o compromiso alguno para usted.</div>
+                                                <div style={{ color: '#000080' }}>Descubre en minutos si eres sujeto de crédito y el monto máximo que se puede prestar así como la tasa de interés disponible para tí.</div>
 
-                                                <div>Por favor ingresa los siguientes datos:</div>
-                                                <div className="form-group">
-                                                    <label className="form-label">Email</label>
-                                                    <input value={this.state.email} onChange={this.handleEmailChange} type="text" className="form-control" />
+                                                <div className="form-description mt-4">-Recibirás una Resolución de acuerdo con los datos declarados</div>
+                                                <div className="form-description mt-2">-En caso de estar interesado, podrás continuar el proceso en línea o en las oficinas de SwayDo.mx de tu ciudad, en un proceso presencial.</div>
+                                                <div className="form-description mt-2">-Esta pre-calificación no supone costo o compromiso alguno para usted.</div>
+                                                <div className="mt-4" style={{ color: '#4c4c4c', fontStyle: 'italic', fontFamily: "Open Sans, sans-serif" }}>Por favor ingresa los siguientes datos:</div>
+
+                                                <div className="form-group mt-4">
+                                                    <label className="form-label">Email<span className="form-required-symbol">*</span></label>
+                                                    <input value={this.state.email} onChange={this.handleEmailChange} type="text" className={this.state.emailIsInvalid ? 'form-control is-invalid' : 'form-control'} />
                                                     <div className="invalid-feedback">
                                                         {this.state.emailErrorMsg}
                                                     </div>
                                                 </div>
                                                 <div className="form-group">
-                                                    <label className="form-label">Teléfono</label>
+                                                    <label className="form-label">Teléfono<span className="form-required-symbol">*</span></label>
                                                     <input value={this.state.phone} onChange={this.handlePhoneChange} maxLength="10" type="number" className={this.state.phoneIsInvalid ? 'form-control is-invalid' : 'form-control'} />
                                                     <div className="invalid-feedback">
                                                         {this.state.phoneErrorMsg}
@@ -290,8 +328,8 @@ class Precalificador extends Component {
                                                 {
                                                     this.state.phone.length > 0 && (
                                                         <div className="form-group">
-                                                            <label className="form-label">Confirmar Teléfono</label>
-                                                            <input value={this.state.confirmPhone} onChange={this.handleConfirmPhoneChange} maxLength="10" type="number" className={this.state.confirnmPhoneIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                            <label className="form-label">Confirmar Teléfono<span className="form-required-symbol">*</span></label>
+                                                            <input value={this.state.confirmPhone} onChange={this.handleConfirmPhoneChange} maxLength="10" type="number" className={this.state.confirmPhoneIsInvalid ? 'form-control is-invalid' : 'form-control'} />
                                                             <div className="invalid-feedback">
                                                                 {this.state.confirmPhoneErrorMsg}
                                                             </div>
@@ -306,7 +344,7 @@ class Precalificador extends Component {
                                         formController === 2 && (
                                             <Fragment>
                                                 <div className="form-group">
-                                                    <label className="form-label">Nombre</label>
+                                                    <label className="form-label">Nombre<span className="form-required-symbol">*</span></label>
                                                     <input value={this.state.firstName} onChange={this.handleFirstNameChange} type="text" className={this.state.firstNameIsInvalid ? 'form-control is-invalid' : 'form-control'} />
                                                     <div className="invalid-feedback">
                                                         Este campo es obligatorio.
@@ -317,14 +355,14 @@ class Precalificador extends Component {
                                                     <input value={this.state.secondName} onChange={this.handleSecondNameChange} type="text" className="form-control" />
                                                 </div>
                                                 <div className="form-group">
-                                                    <label className="form-label">Apellido Paterno</label>
+                                                    <label className="form-label">Apellido Paterno<span className="form-required-symbol">*</span></label>
                                                     <input value={this.state.lastName} onChange={this.handleLastNameChange} type="text" className={this.state.lastNameIsInvalid ? 'form-control is-invalid' : 'form-control'} />
                                                     <div className="invalid-feedback">
                                                         Este campo es obligatorio.
                                                     </div>
                                                 </div>
                                                 <div className="form-group">
-                                                    <label className="form-label">Apellido Materno</label>
+                                                    <label className="form-label">Apellido Materno<span className="form-required-symbol">*</span></label>
                                                     <input value={this.state.secondLastName} onChange={this.handleSecondLastNameChange} type="text" className={this.state.secondLastNameIsInvalid ? 'form-control is-invalid' : 'form-control'} />
                                                     <div className="invalid-feedback">
                                                         Este campo es obligatorio.
@@ -365,12 +403,25 @@ class Precalificador extends Component {
                                                 </div> */}
 
                                                 {/* Domicilio */}
-                                                <div className="form-group">
-                                                    <label className="form-label">Calle<span className="form-required-symbol">*</span></label>
-                                                    <input value={this.state.calle} onChange={this.handleCalleChange} type="text" className={this.state.calleIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                    <div className="invalid-feedback">
-                                                        {this.state.calleErrorMsg}
+                                                <div className="form-group mt-4">
+                                                    <div style={{ display: 'flex' }}>
+                                                        <div style={{ width: '75%', marginRight: '10px' }}>
+                                                            <label className="form-label">Calle<span className="form-required-symbol">*</span></label>
+                                                            <input value={this.state.calle} onChange={this.handleCalleChange} type="text" className={this.state.calleIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                            <div className="invalid-feedback">
+                                                                {this.state.calleErrorMsg}
+                                                            </div>
+                                                        </div>
+                                                        <div style={{ width: '25%' }}>
+                                                            <label className="form-label">No. Exterior<span className="form-required-symbol">*</span></label>
+                                                            <input value={this.state.numeroExt} onChange={this.handleNumeroExtChange} type="text" className={this.state.numeroExtIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                        </div>
                                                     </div>
+
+                                                </div>
+
+                                                <div className="form-group">
+
                                                 </div>
 
                                                 <div className="form-group">
@@ -391,8 +442,8 @@ class Precalificador extends Component {
 
                                                 <div className="form-group">
                                                     <label className="form-label">Estado<span className="form-required-symbol">*</span></label>
-                                                    <select value={this.state.entidadFederativa} onChange={this.handleEntidadFederativaChange} className="form-control">
-
+                                                    <select value={this.state.entidadFederativa} onChange={this.handleEntidadFederativaChange} className={this.state.entidadFederativaIsInvalid ? 'form-control is-invalid' : "form-control"}>
+                                                        <option value="">Seleccionar</option>
                                                         <option value="CDMX">Ciudad de México</option>
                                                         <option value="AGS">Aguascalientes</option>
                                                         <option value="BCN">Baja California</option>
@@ -426,6 +477,9 @@ class Precalificador extends Component {
                                                         <option value="YUC">Yucat&aacute;n</option>
                                                         <option value="ZAC">Zacatecas</option>
                                                     </select>
+                                                    <div className="invalid-feedback">
+                                                        {this.state.entidadFederativaErrorMsg}
+                                                    </div>
                                                 </div>
 
                                                 <div className="form-group">
