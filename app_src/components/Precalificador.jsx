@@ -78,12 +78,15 @@ class Precalificador extends Component {
         sourceOfResources: '',
         verifiableIncome: '',
         unverifiableIncome: '',
+        jobDescription: '',
         sourceOfResourcesIsInvalid: false,
         verifiableIncomeIsInvalid: false,
         unverifiableIncomeIsInvalid: false,
+        jobDescriptionIsInvalid: false,
         sourceOfResourcesErrorMsg: 'Este campo es obligatorio.',
         verifiableIncomeErrorMsg: 'Este campo es obligatorio.',
         unverifiableIncomeErrorMsg: 'Este campo es obligatorio.',
+        jobDescriptionErrorMsg: 'Este campo es obligatorio.',
 
         // PART_6
         nip: '',
@@ -213,6 +216,8 @@ class Precalificador extends Component {
         this.setState({ unverifiableIncome: e.target.value })
     }
 
+    handleJobDescriptionChange = (e) => this.setState({ jobDescription: e.target.value, jobDescriptionIsInvalid: e.target.value.length > 0 ? false : true })
+
     handleBackBtn = (e) => {
         e.preventDefault()
         const { formController } = this.state
@@ -228,7 +233,7 @@ class Precalificador extends Component {
             firstName, lastName, secondLastName, dateOfBirth, gender, firstNameIsInvalid, lastNameIsInvalid, secondLastNameIsInvalid,
             calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, calleIsInvalid, numeroExtIsInvalid, municipioIsInvalid, postalCodeIsInvalid,
             creditType, creditAmount, propertyValue, creditTypeIsInvalid, creditAmountIsInvalid, propertyValueIsInvalid,
-            sourceOfResources, verifiableIncome, unverifiableIncome, sourceOfResourcesIsInvalid, verifiableIncomeIsInvalid, unverifiableIncomeIsInvalid,
+            sourceOfResources, verifiableIncome, jobDescription, sourceOfResourcesIsInvalid, verifiableIncomeIsInvalid, unverifiableIncomeIsInvalid, jobDescriptionIsInvalid,
         } = this.state
 
         if (formController === totalFormSections) return
@@ -270,10 +275,11 @@ class Precalificador extends Component {
         }
 
         // Check PART_5
-        if (formController === 5 && (!sourceOfResources || !verifiableIncome || sourceOfResourcesIsInvalid || verifiableIncomeIsInvalid || unverifiableIncomeIsInvalid)) {
+        if (formController === 5 && (!sourceOfResources || !verifiableIncome || !jobDescription
+            || sourceOfResourcesIsInvalid || verifiableIncomeIsInvalid || unverifiableIncomeIsInvalid || !jobDescriptionIsInvalid)) {
             if (!sourceOfResources) this.setState({ sourceOfResourcesIsInvalid: true })
             if (!verifiableIncome) this.setState({ verifiableIncomeIsInvalid: true })
-            // if (!unverifiableIncome) this.setState({ unverifiableIncomeIsInvalid: true })
+            if (!jobDescription) this.setState({ jobDescriptionIsInvalid: true })
             return
         }
 
@@ -535,7 +541,7 @@ class Precalificador extends Component {
                                         formController === 4 && (
                                             <Fragment>
                                                 <div className="form-group mt-4">
-                                                    <label className="form-label">Tipo de crédito</label>
+                                                    <label className="form-label">Tipo de crédito<span className="form-required-symbol">*</span></label>
                                                     <select value={this.state.creditType} onChange={this.handleCreditTypeChange} className={this.state.creditTypeIsInvalid ? 'form-control is-invalid' : 'form-control'}>
                                                         <option value="">Seleccionar</option>
                                                         <option value="Compra de Casa">Compra de Casa</option>
@@ -551,7 +557,7 @@ class Precalificador extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="form-group">
-                                                    <label className="form-label">Monto de crédito que desea solicitar</label>
+                                                    <label className="form-label">Monto de crédito que desea solicitar<span className="form-required-symbol">*</span></label>
                                                     <div className="input-group mb-3">
                                                         <div className="input-group-prepend">
                                                             <span className="input-group-text">MXN</span>
@@ -563,7 +569,7 @@ class Precalificador extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="form-group">
-                                                    <label className="form-label">Valor de la propiedad</label>
+                                                    <label className="form-label">Valor de la propiedad<span className="form-required-symbol">*</span></label>
                                                     <div className="input-group mb-3">
                                                         <div className="input-group-prepend">
                                                             <span className="input-group-text">MXN</span>
@@ -581,8 +587,8 @@ class Precalificador extends Component {
                                     {
                                         formController === 5 && (
                                             <Fragment>
-                                                <div className="form-group">
-                                                    <label className="form-label">¿De dónde provienen la mayor parte de tus ingresos?</label>
+                                                <div className="form-group mt-4">
+                                                    <label className="form-label">¿De dónde provienen la mayor parte de tus ingresos?<span className="form-required-symbol">*</span></label>
                                                     <select value={this.state.sourceOfResources} onChange={this.handleSourceOfResourcesChange} className={this.state.sourceOfResourcesIsInvalid ? 'form-control is-invalid' : 'form-control'}>
                                                         <option value="">Seleccionar</option>
                                                         <option value="Compra de Casa">Compra de Casa</option>
@@ -598,7 +604,7 @@ class Precalificador extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="form-group">
-                                                    <label className="form-label">Monto de tus ingresos depositados en tu cuenta bancaria cada mes</label>
+                                                    <label className="form-label">Monto de tus ingresos depositados en tu cuenta bancaria cada mes<span className="form-required-symbol">*</span></label>
                                                     <div className="input-group mb-3">
                                                         <div className="input-group-prepend">
                                                             <span className="input-group-text">MXN</span>
@@ -619,6 +625,14 @@ class Precalificador extends Component {
                                                         <div className="invalid-feedback">
                                                             {this.state.unverifiableIncomeErrorMsg}
                                                         </div>
+                                                    </div>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-label" style={{ marginBottom: '0px' }}>Describe brevemente las funciones que desempeñas en tu trabajo<span className="form-required-symbol">*</span></label>
+                                                    <div className="form-label-description" style={{ marginBottom: '5px' }}>Se lo más específico y breve posible</div>
+                                                    <input value={this.state.jobDescription} onChange={this.handleJobDescriptionChange} type="text" className={this.state.jobDescriptionIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                    <div className="invalid-feedback">
+                                                        {this.state.jobDescriptionErrorMsg}
                                                     </div>
                                                 </div>
                                             </Fragment>
