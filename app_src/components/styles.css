@@ -1,5 +1,5 @@
 .form-container {
-    box-shadow: 0 0 10px 0 rgba(0,0,0,.1);    
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
 }
 
 .form-title {
@@ -33,15 +33,13 @@
     background-color: #4c4c4c !important;
     font-size: 16px;
     padding: 10px 40px;
-    
 }
 
 .btn-continue {
     border: 1px solid #4c4c4c;
-    background-color:white !important;
+    background-color: white !important;
     font-size: 16px;
     padding: 10px 40px;
-   
 }
 
 .form-subtitle {
@@ -74,4 +72,27 @@
     font-size: 12px;
     font-weight: normal;
     font-style: normal;
+}
+
+.rc-checkbox:hover .rc-checkbox-inner, .rc-checkbox-input:focus+.rc-checkbox-inner {
+    border-color: #008000;
+}
+
+.rc-checkbox-checked:hover .rc-checkbox-inner {
+    border-color: #008000;
+}
+
+.rc-checkbox-checked .rc-checkbox-inner {
+    border-color: #008000;
+    background-color: #008000;
+}
+
+.rc-checkbox-checked .rc-checkbox-inner {
+    border-color: #008000;
+    background-color: #008000;
+}
+
+.custom-checkbox {
+    width: 18px;
+    height: 18px;
 }

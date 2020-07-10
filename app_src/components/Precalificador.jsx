@@ -9,13 +9,15 @@ import Loading from './Loading'
 import { saveCreditRequest } from '../actions/creditRequest'
 
 // Libraries
-import { Line } from 'rc-progress';
-import DatePicker from 'react-date-picker';
+import { Line } from 'rc-progress'
+import DatePicker from 'react-date-picker'
+import Checkbox from 'rc-checkbox'
+import 'rc-checkbox/assets/index.css'
 
 
 class Precalificador extends Component {
     state = {
-        formController: 5,
+        formController: 7,
         totalFormSections: 7,
 
         // PART_1
@@ -95,7 +97,9 @@ class Precalificador extends Component {
 
         // PART_7
         confirmNIP: '',
+        acceptTerms: false,
         confirmNIPIsInvalid: false,
+        acceptTermsIsInvalid: false,
         confirmNIPErrorMsg: 'Este campos es obligatorio.',
 
         loading: true,
@@ -218,6 +222,34 @@ class Precalificador extends Component {
 
     handleJobDescriptionChange = (e) => this.setState({ jobDescription: e.target.value, jobDescriptionIsInvalid: e.target.value.length > 0 ? false : true })
 
+    /* PART_6 */
+    handleNIPChange = (e) => {
+        const nip = e.target.value
+        if (nip.toString().length > 4) {
+            return
+        } else if (nip.toString().length < 4) {
+            this.setState({ nipIsInvalid: true, nipErrorMsg: 'El NIP debe contener 4 dígitos' })
+        } else {
+            this.setState({ nipIsInvalid: false, nipErrorMsg: 'Este campo es obligatorio' })
+        }
+        this.setState({ nip })
+    }
+
+    /* PART_7 */
+    handleConfirmNIPChange = (e) => {
+        const nip = e.target.value
+        if (nip.toString().length > 4) {
+            return
+        } else if (nip.toString().length < 4) {
+            this.setState({ confirmNIPIsInvalid: true, confirmNIPErrorMsg: 'El NIP debe contener 4 dígitos' })
+        } else {
+            this.setState({ confirmNIPIsInvalid: false, confirmNIPErrorMsg: 'Este campo es obligatorio' })
+        }
+        this.setState({ confirmNIP: nip })
+    }
+
+    handleAcceptTermsChange = (e) => this.setState({ acceptTerms: !this.state.acceptTerms, acceptTermsIsInvalid: !this.state.acceptTerms ? false : true })
+
     handleBackBtn = (e) => {
         e.preventDefault()
         const { formController } = this.state
@@ -234,6 +266,8 @@ class Precalificador extends Component {
             calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, calleIsInvalid, numeroExtIsInvalid, municipioIsInvalid, postalCodeIsInvalid,
             creditType, creditAmount, propertyValue, creditTypeIsInvalid, creditAmountIsInvalid, propertyValueIsInvalid,
             sourceOfResources, verifiableIncome, jobDescription, sourceOfResourcesIsInvalid, verifiableIncomeIsInvalid, unverifiableIncomeIsInvalid, jobDescriptionIsInvalid,
+            nip, nipIsInvalid,
+
         } = this.state
 
         if (formController === totalFormSections) return
@@ -283,31 +317,27 @@ class Precalificador extends Component {
             return
         }
 
-        this.setState({ formController: formController + 1 })
-    }
-
-    handlesContinueBtn = (e) => {
-        e.preventDefault()
-
-        const { monto, tipoCredito, plazo, nombre } = this.state
-        const { dispatch } = this.props
-        console.log('test')
-        if (!monto) {
-            this.setState({ montoIsInvalid: true })
-        }
-
-        if (!nombre) {
-            this.setState({ nombreIsInvalid: true })
-        }
-
-        if (!monto || !nombre) {
+        // Check PART_6
+        if (formController === 6 && (!nip || nipIsInvalid)) {
+            if (!nip) this.setState({ nipIsInvalid: true })
             return
         }
 
-        // 1. API request
 
-        // 2. Dispatch save action
-        dispatch(saveCreditRequest(params))
+
+
+        this.setState({ formController: formController + 1 })
+    }
+
+    handleSubmitBtn = (e) => {
+        e.preventDefault()
+        const { confirmNIP, confirmNIPIsInvalid, acceptTerms, acceptTermsIsInvalid } = this.state
+        // Check PART_7
+        if (!confirmNIP || confirmNIPIsInvalid || !acceptTerms || acceptTermsIsInvalid) {
+            if (!confirmNIP) this.setState({ confirmNIPIsInvalid: true })
+            if(!acceptTerms) this.setState({ acceptTermsIsInvalid: true })
+            return
+        }
     }
 
     validateEmail(email) {
@@ -333,21 +363,41 @@ class Precalificador extends Component {
 
                             <Line percent={progress} strokeWidth="1" strokeColor="#274d00" strokeLinecap="square" />
                             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px 20px 20px 20px' }}>
-                                <div className="form-subtitle">Pre-calificación</div>
+                                <div className="form-subtitle">
+                                    {
+                                        formController === 1 ? 'Pre-calificación' :
+                                            formController === 2 ? 'Datos Personales' :
+                                                formController === 3 ? 'Dirección' :
+                                                    formController === 4 ? 'Datos del Crédito' :
+                                                        formController === 5 ? 'Tipo de Actividad' :
+                                                            formController === 6 ? 'Autorización Círculo de Crédito' :
+                                                                formController === 7 ? 'Autorización de Consulta de Historial Crediticio' : ''
+                                    }
+                                </div>
                                 <div className="form-subtitle">{progress}%</div>
                             </div>
 
                             <img className="card-img-top" src="https://s3-us-west-2.amazonaws.com/userdata123/www/imagefields/59450/59450072.jpg?_=1594321348260" />
                             <div className="card-body">
-                                <div className="form-title" style={{ marginTop: '5px' }}>Pre-calificador Hipotecario</div>
+                                <div className="form-title" style={{ marginTop: '5px' }}>
+
+                                    {
+                                        formController === 1 ? 'Pre-calificador Hipotecario' :
+                                            formController === 2 ? 'Datos Personales' :
+                                                formController === 3 ? 'Dirección' :
+                                                    formController === 4 ? 'Datos del Crédito' :
+                                                        formController === 5 ? 'Tipo de Actividad' :
+                                                            formController === 6 ? 'Autorización Círculo de Crédito' :
+                                                                formController === 7 ? 'Autorización de Consulta de Historial Crediticio' : ''
+                                    }
+                                </div>
 
 
                                 <form action="">
                                     {
                                         formController === 1 && (
                                             <Fragment>
-                                                <div style={{ color: '#000080' }}>Descubre en minutos si eres sujeto de crédito y el monto máximo que se puede prestar así como la tasa de interés disponible para tí.</div>
-
+                                                <div className="mt-2" style={{ color: '#000080' }}>Descubre en minutos si eres sujeto de crédito y el monto máximo que se puede prestar así como la tasa de interés disponible para tí.</div>
                                                 <div className="form-description mt-4">-Recibirás una Resolución de acuerdo con los datos declarados</div>
                                                 <div className="form-description mt-2">-En caso de estar interesado, podrás continuar el proceso en línea o en las oficinas de SwayDo.mx de tu ciudad, en un proceso presencial.</div>
                                                 <div className="form-description mt-2">-Esta pre-calificación no supone costo o compromiso alguno para usted.</div>
@@ -385,7 +435,7 @@ class Precalificador extends Component {
                                     {
                                         formController === 2 && (
                                             <Fragment>
-                                                <div className="form-group">
+                                                <div className="form-group mt-4">
                                                     <label className="form-label">Nombre<span className="form-required-symbol">*</span></label>
                                                     <input value={this.state.firstName} onChange={this.handleFirstNameChange} type="text" className={this.state.firstNameIsInvalid ? 'form-control is-invalid' : 'form-control'} />
                                                     <div className="invalid-feedback">
@@ -641,13 +691,16 @@ class Precalificador extends Component {
                                     {
                                         formController === 6 && (
                                             <Fragment>
-                                                <div>Ingresar NIP</div>
-                                                <div>El cliente autoriza a SwayLending la utilización de medios electrónicos de autenticación tales como el NIP.</div>
-                                                <div>Hemos enviado un NIP de 4 dígitos como mensaje de texto (SMS) a tu teléfono celular: <span style={{ fontWeight: 'bold' }}>{this.state.phone}</span></div>
-                                                <label className="form-label">NIP</label>
-                                                <input value={this.state.nip} onChange={this.handleNIPChange} type="number" className={this.state.nipIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                <div className="invalid-feedback">
-                                                    {this.state.nipErrorMsg}
+                                                <div className="form-description mt-2">El cliente autoriza a SwayLending la utilización de medios electrónicos de autenticación tales como el NIP.</div>
+                                                <div className="form-description mt-2" style={{ color: 'rgb(0, 0, 128)', fontWeight: '500' }}>Hemos enviado un NIP de 4 dígitos como mensaje de texto (SMS) a tu teléfono celular <span style={{ fontWeight: 'bold' }}>{this.state.phone}</span></div>
+                                                <div className="row mt-2 mb-1">
+                                                    <div className="col-xs-6 offset-xs-3 col-sm-6 offset-sm-3 col-md-6 offset-md-3">
+                                                        <label className="form-label mt-4">NIP<span className="form-required-symbol">*</span></label>
+                                                        <input value={this.state.nip} onChange={this.handleNIPChange} type="number" className={this.state.nipIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                        <div className="invalid-feedback">
+                                                            {this.state.nipErrorMsg}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </Fragment>
                                         )
@@ -656,12 +709,23 @@ class Precalificador extends Component {
                                     {
                                         formController === 7 && (
                                             <Fragment>
-                                                <div>Autorización de consulta de historial crediticio</div>
-                                                <div>Para continuar, y si estás de acuerdo con la consulta de tu historial crediticio, acepta los términos e ingresa nuevamente tu NIP, que te enviamos previamente. </div>
-                                                <label className="form-label">Ingresa tu NIP nuevamente</label>
-                                                <input value={this.state.confirmNIP} onChange={this.handleConfirmNIPChange} type="number" className={this.state.confirmNIPIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                <div className="invalid-feedback">
-                                                    {this.state.confirmNIPErrorMsg}
+
+                                                <div className="form-description mt-2" style={{ color: 'rgb(0, 0, 128)', fontWeight: '500' }}>Para continuar, y si estás de acuerdo con la consulta de tu historial crediticio, acepta los términos e ingresa nuevamente tu NIP, que te enviamos previamente. </div>
+                                                <div className="row mt-4 mb-2">
+                                                    <div className="col-xs-6 offset-xs-3 col-sm-6 offset-sm-3 col-md-6 offset-md-3">
+                                                        <div className="form-group">
+                                                            <label className="form-label">Ingresa tu NIP nuevamente<span className="form-required-symbol">*</span></label>
+                                                            <input value={this.state.confirmNIP} onChange={this.handleConfirmNIPChange} type="number" className={this.state.confirmNIPIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                            <div className="invalid-feedback">
+                                                                {this.state.confirmNIPErrorMsg}
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-check checkbox-warning-filled">
+                                                            {/* <input style={{width:'18px', height:'18px'}} checked={this.state.acceptTerms} onChange={this.handleAcceptTermsChange} type="checkbox" className="form-check-input filled-in"></input> */}
+                                                            <Checkbox className="custom-checkbox" checked={this.state.acceptTerms} onChange={this.handleAcceptTermsChange} />
+                                                            <label className="form-check-label form-label ml-2" style={{color: this.state.acceptTermsIsInvalid ? '#dc3545' : '#4c4c4c'}}>Acepto la consulta a mi Buró de Crédito</label>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </Fragment>
                                         )
@@ -675,7 +739,7 @@ class Precalificador extends Component {
                                                     <button onClick={this.handleBackBtn} className="btn btn-light btn-continue">Previa</button>
                                                 </div>
                                                 <div className="text-center mt-4">
-                                                    <button onClick={this.handleContinueBtn} className="btn btn-dark btn-form">Simular mi crédito</button>
+                                                    <button onClick={this.handleSubmitBtn} className="btn btn-dark btn-form">Simular mi crédito</button>
                                                 </div>
                                             </div>
                                             :
