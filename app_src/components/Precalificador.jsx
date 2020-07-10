@@ -16,18 +16,12 @@ import DatePicker from 'react-date-picker';
 class Precalificador extends Component {
     state = {
         formController: 1,
-        totalFormSections: 4,
+        totalFormSections: 7,
+
         // PART_1
-        firstName: '',
-        secondName: '',
-        lastName: '',
-        secondLastName: '',
         email: '',
         phone: '',
         confirmPhone: '',
-        firstNameIsInvalid: false,
-        lastNameIsInvalid: false,
-        secondLastNameIsInvalid: false,
         emailIsInvalid: false,
         phoneIsInvalid: false,
         confirnmPhoneIsInvalid: false,
@@ -36,21 +30,30 @@ class Precalificador extends Component {
         confirmPhoneErrorMsg: 'Este campo es obligatorio.',
 
         // PART_2
+        firstName: '',
+        secondName: '',
+        lastName: '',
+        secondLastName: '',     
         dateOfBirth: new Date(),
         gender: 'Hombre',
-        rfc: '',
+        rfc: '',          
+        firstNameIsInvalid: false,
+        lastNameIsInvalid: false,
+        secondLastNameIsInvalid: false,        
+        rfcIsInvalid: false,
+        rfcErrorMsg: 'Este campo es obligatorio.',
+        
+        // PART_3
         calle: '',
         numeroExt: '',
         colonia: '',
         municipio: '',
         entidadFederativa: '',
-        postalCode: '',
-        rfcIsInvalid: false,
+        postalCode: '',        
         calleIsInvalid: false,
         numeroExtIsInvalid: false,
         coloniaIsInvalid: false,
-        municipioIsInvalid: false,
-        rfcErrorMsg: 'Este campo es obligatorio.',
+        municipioIsInvalid: false,       
         calleErrorMsg: 'Este campo es obligatorio.',
         numeroExtErrorMsg: 'Este campo es obligatorio.',
         coloniaErrorMsg: 'Este campo es obligatorio.',
@@ -58,21 +61,34 @@ class Precalificador extends Component {
         entidadFederativaErrorMsg: ' Este campo es obligatorio',
         postalCode: 'Este campo es obligatorio.',
 
-        // PART_3
-        creditType: '',
+        // PART_4
+        creditType: '',        
+        creditAmount: '',
+        propertyValue: '',        
+        creditAmountIsInvalid: false,
+        propertyValueIsInvalid: false,        
+        creditAmountErrorMsg: 'Este campo es obligatorio.',
+        propertyValueErrorMsg: 'Este campo es obligatorio.',
+
+        // PART_5
         sourceOfResources: '',
         verifiableIncome: '',
         unverifiableIncome: '',
-        creditAmount: '',
-        propertyValue: '',
         verifiableIncomeIsInvalid: false,
         unverifiableIncomeIsInvalid: false,
-        creditAmountIsInvalid: false,
-        propertyValueIsInvalid: false,
         verifiableIncomeErrorMsg: 'Este campo es obligatorio.',
         unverifiableIncomeErrorMsg: 'Este campo es obligatorio.',
-        creditAmountErrorMsg: 'Este campo es obligatorio.',
-        propertyValueErrorMsg: 'Este campo es obligatorio.',
+
+        // PART_6
+        nip: '',
+        nipIsInvalid: false,
+        nipErrorMsg: 'Este campo es obligatorio.',
+
+        // PART_7
+        confirmNIP: '',
+        confirmNIPIsInvalid: false,
+        confirmNIPErrorMsg: 'Este campos es obligatorio.',
+
         loading: true,
         serverMsg: '',
     }
@@ -223,7 +239,7 @@ class Precalificador extends Component {
 
     render() {
         const { formController, totalFormSections, loading } = this.state
-        const progress = formController / totalFormSections * 100
+        const progress = (formController / totalFormSections * 100).toFixed(1)
 
 
         if (loading === true) {
@@ -245,42 +261,18 @@ class Precalificador extends Component {
                             <img className="card-img-top" src="https://s3-us-west-2.amazonaws.com/userdata123/www/imagefields/59450/59450072.jpg?_=1594321348260" />
                             <div className="card-body">
                                 <div className="form-title" style={{ marginTop: '5px' }}>Pre-calificador Hipotecario</div>
-                                <div>Descubre en minutos si eres sujeto de crédito y el monto máximo que se puede prestar así como la tasa de interés disponible para tí.</div>
-                                <div>-Recibirás una Resolución de acuerdo con los datos declarados</div>
-                                <div>-En caso de estar interesado, podrás continuar el proceso en línea o en las oficinas de SwayDo.mx de tu ciudad, en un proceso presencial.</div>
-                                <div>-Esta pre-calificación no supone costo o compromiso alguno para usted.</div>
 
-                                <div>Por favor ingresa los siguientes datos:</div>
 
                                 <form action="">
                                     {
                                         formController === 1 && (
                                             <Fragment>
-                                                <div className="form-group">
-                                                    <label className="form-label">Nombre</label>
-                                                    <input value={this.state.firstName} onChange={this.handleFirstNameChange} type="text" className={this.state.firstNameIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                    <div className="invalid-feedback">
-                                                        Este campo es obligatorio.
-                                        </div>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="form-label">Segundo Nombre</label>
-                                                    <input value={this.state.secondName} onChange={this.handleSecondNameChange} type="text" className="form-control" />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="form-label">Apellido Paterno</label>
-                                                    <input value={this.state.lastName} onChange={this.handleLastNameChange} type="text" className={this.state.lastNameIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                    <div className="invalid-feedback">
-                                                        Este campo es obligatorio.
-                                        </div>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="form-label">Apellido Materno</label>
-                                                    <input value={this.state.secondLastName} onChange={this.handleSecondLastNameChange} type="text" className={this.state.secondLastNameIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                    <div className="invalid-feedback">
-                                                        Este campo es obligatorio.
-                                        </div>
-                                                </div>
+                                                <div>Descubre en minutos si eres sujeto de crédito y el monto máximo que se puede prestar así como la tasa de interés disponible para tí.</div>
+                                                <div>-Recibirás una Resolución de acuerdo con los datos declarados</div>
+                                                <div>-En caso de estar interesado, podrás continuar el proceso en línea o en las oficinas de SwayDo.mx de tu ciudad, en un proceso presencial.</div>
+                                                <div>-Esta pre-calificación no supone costo o compromiso alguno para usted.</div>
+
+                                                <div>Por favor ingresa los siguientes datos:</div>
                                                 <div className="form-group">
                                                     <label className="form-label">Email</label>
                                                     <input value={this.state.email} onChange={this.handleEmailChange} type="text" className="form-control" />
@@ -314,6 +306,31 @@ class Precalificador extends Component {
                                         formController === 2 && (
                                             <Fragment>
                                                 <div className="form-group">
+                                                    <label className="form-label">Nombre</label>
+                                                    <input value={this.state.firstName} onChange={this.handleFirstNameChange} type="text" className={this.state.firstNameIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                    <div className="invalid-feedback">
+                                                        Este campo es obligatorio.
+                                                    </div>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-label">Segundo Nombre</label>
+                                                    <input value={this.state.secondName} onChange={this.handleSecondNameChange} type="text" className="form-control" />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-label">Apellido Paterno</label>
+                                                    <input value={this.state.lastName} onChange={this.handleLastNameChange} type="text" className={this.state.lastNameIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                    <div className="invalid-feedback">
+                                                        Este campo es obligatorio.
+                                                    </div>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-label">Apellido Materno</label>
+                                                    <input value={this.state.secondLastName} onChange={this.handleSecondLastNameChange} type="text" className={this.state.secondLastNameIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                    <div className="invalid-feedback">
+                                                        Este campo es obligatorio.
+                                                    </div>
+                                                </div>
+                                                <div className="form-group">
                                                     <label className="form-label">Fecha de nacimiento<span className="form-required-symbol">*</span></label>
                                                     <div>
                                                         <DatePicker
@@ -330,6 +347,14 @@ class Precalificador extends Component {
                                                         <option value="Mujer">Mujer</option>
                                                     </select>
                                                 </div>
+                                            </Fragment>
+                                        )
+                                    }
+
+                                    {
+                                        formController === 3 && (
+                                            <Fragment>
+
 
                                                 {/* <div className="form-group">
                                                     <label className="form-label">RFC</label>
@@ -416,7 +441,7 @@ class Precalificador extends Component {
 
 
                                     {
-                                        formController === 3 && (
+                                        formController === 4 && (
                                             <Fragment>
                                                 <div className="form-group">
                                                     <label className="form-label">Tipo de crédito</label>
@@ -430,6 +455,27 @@ class Precalificador extends Component {
                                                         <option value="Liquidez (Pago a pasivos)">Liquidez (Pago a pasivos)</option>
                                                     </select>
                                                 </div>
+                                                <div className="form-group">
+                                                    <label className="form-label">Monto de crédito que desea solicitar</label>
+                                                    <input value={this.state.creditAmount} onChange={this.handleCreditAmountChange} type="number" className={this.state.creditAmountIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                    <div className="invalid-feedback">
+                                                        {this.state.creditAmountErrorMsg}
+                                                    </div>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-label">Valor de la propiedad</label>
+                                                    <input value={this.state.propertyValue} onChange={this.handlePropertyValueChange} type="number" className={this.state.propertyValueIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                    <div className="invalid-feedback">
+                                                        {this.state.propertyValueErrorMsg}
+                                                    </div>
+                                                </div>
+                                            </Fragment>
+                                        )
+                                    }
+
+                                    {
+                                        formController === 5 && (
+                                            <Fragment>
                                                 <div className="form-group">
                                                     <label className="form-label">¿De dónde provienen la mayor parte de tus ingresos?</label>
                                                     <select value={this.state.sourceOfResources} onChange={this.handleSourceOfResourcesChange} className="form-control">
@@ -456,54 +502,67 @@ class Precalificador extends Component {
                                                         {this.state.unverifiableIncomeErrorMsg}
                                                     </div>
                                                 </div>
-                                                <div className="form-group">
-                                                    <label className="form-label">Monto de crédito que desea solicitar</label>
-                                                    <input value={this.state.creditAmount} onChange={this.handleCreditAmountChange} type="number" className={this.state.creditAmountIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                    <div className="invalid-feedback">
-                                                        {this.state.creditAmountErrorMsg}
-                                                    </div>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="form-label">Valor de la propiedad</label>
-                                                    <input value={this.state.propertyValue} onChange={this.handlePropertyValueChange} type="number" className={this.state.propertyValueIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                    <div className="invalid-feedback">
-                                                        {this.state.propertyValueErrorMsg}
-                                                    </div>
+                                            </Fragment>
+                                        )
+                                    }
+
+                                    {
+                                        formController === 6 && (
+                                            <Fragment>
+                                                <div>Ingresar NIP</div>
+                                                <div>El cliente autoriza a SwayLending la utilización de medios electrónicos de autenticación tales como el NIP.</div>
+                                                <div>Hemos enviado un NIP de 4 dígitos como mensaje de texto (SMS) a tu teléfono celular: <span style={{ fontWeight: 'bold' }}>{this.state.phone}</span></div>
+                                                <label className="form-label">NIP</label>
+                                                <input value={this.state.nip} onChange={this.handleNIPChange} type="number" className={this.state.nipIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                <div className="invalid-feedback">
+                                                    {this.state.nipErrorMsg}
                                                 </div>
                                             </Fragment>
                                         )
                                     }
 
-                                </form>
-                                {
-                                    formController === totalFormSections
-                                        ?
-                                        <div className="text-center " style={{ display: 'flex', justifyContent: 'center' }}>
-                                            <div className="text-center mt-4" style={{ marginRight: '10px' }}>
-                                                <button onClick={this.handleBackBtn} className="btn btn-light btn-continue">Previa</button>
-                                            </div>
-                                            <div className="text-center mt-4">
-                                                <button onClick={this.handleContinueBtn} className="btn btn-dark btn-form">Simular mi crédito</button>
-                                            </div>
-                                        </div>
-                                        :
-                                        formController !== 1
+                                    {
+                                        formController === 7 && (
+                                            <Fragment>
+                                                <div>Autorización de consulta de historial crediticio</div>
+                                                <div>Para continuar, y si estás de acuerdo con la consulta de tu historial crediticio, acepta los términos e ingresa nuevamente tu NIP, que te enviamos previamente. </div>
+                                                <label className="form-label">Ingresa tu NIP nuevamente</label>
+                                                <input value={this.state.confirmNIP} onChange={this.handleConfirmNIPChange} type="number" className={this.state.confirmNIPIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                <div className="invalid-feedback">
+                                                    {this.state.confirmNIPErrorMsg}
+                                                </div>
+                                            </Fragment>
+                                        )
+                                    }
+
+                                    {
+                                        formController === totalFormSections
                                             ?
                                             <div className="text-center " style={{ display: 'flex', justifyContent: 'center' }}>
                                                 <div className="text-center mt-4" style={{ marginRight: '10px' }}>
                                                     <button onClick={this.handleBackBtn} className="btn btn-light btn-continue">Previa</button>
                                                 </div>
                                                 <div className="text-center mt-4">
-                                                    <button onClick={this.handleContinueBtn} className="btn btn-light btn-continue">Próxima página</button>
+                                                    <button onClick={this.handleContinueBtn} className="btn btn-dark btn-form">Simular mi crédito</button>
                                                 </div>
                                             </div>
                                             :
-                                            <div className="text-center mt-4">
-                                                <button onClick={this.handleContinueBtn} className="btn btn-light btn-continue">Próxima página</button>
-                                            </div>
-                                }
-
-
+                                            formController !== 1
+                                                ?
+                                                <div className="text-center " style={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <div className="text-center mt-4" style={{ marginRight: '10px' }}>
+                                                        <button onClick={this.handleBackBtn} className="btn btn-light btn-continue">Previa</button>
+                                                    </div>
+                                                    <div className="text-center mt-4">
+                                                        <button onClick={this.handleContinueBtn} className="btn btn-light btn-continue">Próxima página</button>
+                                                    </div>
+                                                </div>
+                                                :
+                                                <div className="text-center mt-4">
+                                                    <button onClick={this.handleContinueBtn} className="btn btn-light btn-continue">Próxima página</button>
+                                                </div>
+                                    }
+                                </form>
                             </div>
                         </div>
                     </div>
