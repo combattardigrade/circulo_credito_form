@@ -15,7 +15,7 @@ import DatePicker from 'react-date-picker';
 
 class Precalificador extends Component {
     state = {
-        formController: 4,
+        formController: 5,
         totalFormSections: 7,
 
         // PART_1
@@ -78,8 +78,10 @@ class Precalificador extends Component {
         sourceOfResources: '',
         verifiableIncome: '',
         unverifiableIncome: '',
+        sourceOfResourcesIsInvalid: false,
         verifiableIncomeIsInvalid: false,
         unverifiableIncomeIsInvalid: false,
+        sourceOfResourcesErrorMsg: 'Este campo es obligatorio.',
         verifiableIncomeErrorMsg: 'Este campo es obligatorio.',
         unverifiableIncomeErrorMsg: 'Este campo es obligatorio.',
 
@@ -140,21 +142,6 @@ class Precalificador extends Component {
         this.setState({ confirmPhone: e.target.value })
     }
 
-    handleMontoChange = (e) => {
-        const amount = parseFloat(e.target.value)
-
-        if (amount < 250000) {
-            this.setState({ montoIsInvalid: true, montoErrorMsg: 'El valor debe ser mayor o igual a $250,000 MXN' })
-        } else if (amount > 100000000) {
-            this.setState({ montoIsInvalid: true, montoErrorMsg: 'El valor debe ser menor o igual a $100,000,000 MXN' })
-        } else {
-            this.setState({ montoIsInvalid: false, montoErrorMsg: 'Este campo es obligatorio.' })
-        }
-
-        this.setState({ monto: e.target.value })
-    }
-
-
     /* PART_2 */
     handleFirstNameChange = (e) => this.setState({ firstName: e.target.value, firstNameIsInvalid: e.target.value.length > 0 ? false : true })
     handleSecondNameChange = (e) => this.setState({ secondName: e.target.value })
@@ -180,13 +167,17 @@ class Precalificador extends Component {
     handleCreditTypeChange = (e) => this.setState({ creditType: e.target.value, creditTypeIsInvalid: e.target.value.length > 0 ? false : true })
 
     handleCreditAmountChange = (e) => {
-        const amount = e.target.value
-        if (amount <= 0) {
-            this.setState({ creditAmountIsInvalid: true, creditAmountErrorMsg: 'Ingresa una cantidad válida' })
+        const amount = parseFloat(e.target.value)
+
+        if (amount < 250000) {
+            this.setState({ montoIsInvalid: true, montoErrorMsg: 'El valor debe ser mayor o igual a $250,000 MXN' })
+        } else if (amount > 100000000) {
+            this.setState({ montoIsInvalid: true, montoErrorMsg: 'El valor debe ser menor o igual a $100,000,000 MXN' })
         } else {
-            this.setState({ creditAmountIsInvalid: false, creditAmountErrorMsg: 'Este campo es obligatorio.' })
+            this.setState({ montoIsInvalid: false, montoErrorMsg: 'Este campo es obligatorio.' })
         }
-        this.setState({ creditAmount: e.target.value })
+
+        this.setState({ monto: e.target.value })
     }
 
     handlePropertyValueChange = (e) => {
@@ -200,13 +191,25 @@ class Precalificador extends Component {
     }
 
     /* PART_5 */
-    handleSourceOfResourcesChange = (e) => this.setState({ sourceOfResources: e.target.value, })
+    handleSourceOfResourcesChange = (e) => this.setState({ sourceOfResources: e.target.value, sourceOfResourcesIsInvalid: e.target.value.length > 0 ? false : true })
 
     handleVerifiableIncomeChange = (e) => {
+        const amount = e.target.value
+        if (amount < 0) {
+            this.setState({ verifiableIncomeIsInvalid: true, verifiableIncomeErrorMsg: 'Ingresa una cantidad válida' })
+        } else {
+            this.setState({ verifiableIncomeIsInvalid: false, verifiableIncomeErrorMsg: 'Este campo es obligatorio' })
+        }
         this.setState({ verifiableIncome: e.target.value })
     }
 
     handleUnverifiableIncomeChange = (e) => {
+        const amount = e.target.value
+        if (amount < 0) {
+            this.setState({ unverifiableIncomeIsInvalid: true, unverifiableIncomeErrorMsg: 'Ingresa una cantidad válida' })
+        } else {
+            this.setState({ unverifiableIncomeErrorMsg: false, unverifiableIncomeErrorMsg: 'Este campo es obligatorio' })
+        }
         this.setState({ unverifiableIncome: e.target.value })
     }
 
@@ -225,6 +228,7 @@ class Precalificador extends Component {
             firstName, lastName, secondLastName, dateOfBirth, gender, firstNameIsInvalid, lastNameIsInvalid, secondLastNameIsInvalid,
             calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, calleIsInvalid, numeroExtIsInvalid, municipioIsInvalid, postalCodeIsInvalid,
             creditType, creditAmount, propertyValue, creditTypeIsInvalid, creditAmountIsInvalid, propertyValueIsInvalid,
+            sourceOfResources, verifiableIncome, unverifiableIncome, sourceOfResourcesIsInvalid, verifiableIncomeIsInvalid, unverifiableIncomeIsInvalid,
         } = this.state
 
         if (formController === totalFormSections) return
@@ -262,6 +266,14 @@ class Precalificador extends Component {
             if (!creditType) this.setState({ creditTypeIsInvalid: true })
             if (!creditAmount) this.setState({ creditAmountIsInvalid: true })
             if (!propertyValue) this.setState({ propertyValueIsInvalid: true })
+            return
+        }
+
+        // Check PART_5
+        if (formController === 5 && (!sourceOfResources || !verifiableIncome || sourceOfResourcesIsInvalid || verifiableIncomeIsInvalid || unverifiableIncomeIsInvalid)) {
+            if (!sourceOfResources) this.setState({ sourceOfResourcesIsInvalid: true })
+            if (!verifiableIncome) this.setState({ verifiableIncomeIsInvalid: true })
+            // if (!unverifiableIncome) this.setState({ unverifiableIncomeIsInvalid: true })
             return
         }
 
@@ -540,9 +552,9 @@ class Precalificador extends Component {
                                                 </div>
                                                 <div className="form-group">
                                                     <label className="form-label">Monto de crédito que desea solicitar</label>
-                                                    <div class="input-group mb-3">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text">MXN</span>
+                                                    <div className="input-group mb-3">
+                                                        <div className="input-group-prepend">
+                                                            <span className="input-group-text">MXN</span>
                                                         </div>
                                                         <input placeholder="0.0" value={this.state.creditAmount} onChange={this.handleCreditAmountChange} type="number" className={this.state.creditAmountIsInvalid ? 'form-control is-invalid' : 'form-control'} />
                                                         <div className="invalid-feedback">
@@ -552,9 +564,9 @@ class Precalificador extends Component {
                                                 </div>
                                                 <div className="form-group">
                                                     <label className="form-label">Valor de la propiedad</label>
-                                                    <div class="input-group mb-3">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text">MXN</span>
+                                                    <div className="input-group mb-3">
+                                                        <div className="input-group-prepend">
+                                                            <span className="input-group-text">MXN</span>
                                                         </div>
                                                         <input placeholder="0.0" value={this.state.propertyValue} onChange={this.handlePropertyValueChange} type="number" className={this.state.propertyValueIsInvalid ? 'form-control is-invalid' : 'form-control'} />
                                                         <div className="invalid-feedback">
@@ -571,7 +583,8 @@ class Precalificador extends Component {
                                             <Fragment>
                                                 <div className="form-group">
                                                     <label className="form-label">¿De dónde provienen la mayor parte de tus ingresos?</label>
-                                                    <select value={this.state.sourceOfResources} onChange={this.handleSourceOfResourcesChange} className="form-control">
+                                                    <select value={this.state.sourceOfResources} onChange={this.handleSourceOfResourcesChange} className={this.state.sourceOfResourcesIsInvalid ? 'form-control is-invalid' : 'form-control'}>
+                                                        <option value="">Seleccionar</option>
                                                         <option value="Compra de Casa">Compra de Casa</option>
                                                         <option value="Construcción">Construcción</option>
                                                         <option value="Remodelación">Remodelación</option>
@@ -580,19 +593,32 @@ class Precalificador extends Component {
                                                         <option value="Terreno Construcción">Terreno+Construcción</option>
                                                         <option value="Liquidez (Pago a pasivos)">Liquidez (Pago a pasivos)</option>
                                                     </select>
+                                                    <div className="invalid-feedback">
+                                                        {this.state.sourceOfResourcesErrorMsg}
+                                                    </div>
                                                 </div>
                                                 <div className="form-group">
                                                     <label className="form-label">Monto de tus ingresos depositados en tu cuenta bancaria cada mes</label>
-                                                    <input value={this.state.verifiableIncome} onChange={this.handleVerifiableIncomeChange} type="number" className={this.state.verifiableIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                    <div className="invalid-feedback">
-                                                        {this.state.verifiableIncomeErrorMsg}
+                                                    <div className="input-group mb-3">
+                                                        <div className="input-group-prepend">
+                                                            <span className="input-group-text">MXN</span>
+                                                        </div>
+                                                        <input placeholder="0.00" value={this.state.verifiableIncome} onChange={this.handleVerifiableIncomeChange} type="number" className={this.state.verifiableIncomeIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                        <div className="invalid-feedback">
+                                                            {this.state.verifiableIncomeErrorMsg}
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div className="form-group">
                                                     <label className="form-label">Monto de tus ingresos mensuales no comprobables</label>
-                                                    <input value={this.state.unverifiableIncome} onChange={this.handleUnverifiableIncomeChange} type="number" className={this.state.unverifiableIncomeIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                                                    <div className="invalid-feedback">
-                                                        {this.state.unverifiableIncomeErrorMsg}
+                                                    <div className="input-group mb-3">
+                                                        <div className="input-group-prepend">
+                                                            <span className="input-group-text">MXN</span>
+                                                        </div>
+                                                        <input placeholder="0.00" value={this.state.unverifiableIncome} onChange={this.handleUnverifiableIncomeChange} type="number" className={this.state.unverifiableIncomeIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                                        <div className="invalid-feedback">
+                                                            {this.state.unverifiableIncomeErrorMsg}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </Fragment>
