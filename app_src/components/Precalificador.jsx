@@ -167,7 +167,7 @@ class Precalificador extends Component {
     handleNumeroExtChange = (e) => this.setState({ numeroExt: e.target.value, numeroExtIsInvalid: e.target.value.length > 0 ? false : true })
     handleColoniaChange = (e) => this.setState({ colonia: e.target.value, coloniaIsInvalid: e.target.value.length > 0 ? false : true })
     handleMunicipioChange = (e) => this.setState({ municipio: e.target.value, municipioIsInvalid: e.target.value.length > 0 ? false : true })
-    handleEntidadFederativaChange = (e) => this.setState({ entidadFederativa: e.target.value })
+    handleEntidadFederativaChange = (e) => this.setState({ entidadFederativa: e.target.value, entidadFederativaIsInvalid: e.target.value.length > 0 ? false : true })
     handlePostalCodeChange = (e) => this.setState({ postalCode: e.target.value, postalCodeIsInvalid: e.target.value.length > 0 ? false : true })
 
     /* PART_4 */
@@ -177,11 +177,11 @@ class Precalificador extends Component {
         const amount = parseFloat(e.target.value)
 
         if (amount < 250000) {
-            this.setState({ montoIsInvalid: true, montoErrorMsg: 'El valor debe ser mayor o igual a $250,000 MXN' })
+            this.setState({ creditAmountIsInvalid: true, creditAmountErrorMsg: 'El valor debe ser mayor o igual a $250,000 MXN' })
         } else if (amount > 100000000) {
-            this.setState({ montoIsInvalid: true, montoErrorMsg: 'El valor debe ser menor o igual a $100,000,000 MXN' })
+            this.setState({ creditAmountIsInvalid: true, creditAmountErrorMsg: 'El valor debe ser menor o igual a $100,000,000 MXN' })
         } else {
-            this.setState({ montoIsInvalid: false, montoErrorMsg: 'Este campo es obligatorio.' })
+            this.setState({ creditAmountIsInvalid: false, creditAmountErrorMsg: 'Este campo es obligatorio.' })
         }
 
         this.setState({ creditAmount: e.target.value })
@@ -335,7 +335,7 @@ class Precalificador extends Component {
         // Check PART_7
         if (!confirmNIP || confirmNIPIsInvalid || !acceptTerms || acceptTermsIsInvalid) {
             if (!confirmNIP) this.setState({ confirmNIPIsInvalid: true })
-            if(!acceptTerms) this.setState({ acceptTermsIsInvalid: true })
+            if (!acceptTerms) this.setState({ acceptTermsIsInvalid: true })
             return
         }
     }
@@ -723,7 +723,7 @@ class Precalificador extends Component {
                                                         <div className="form-check checkbox-warning-filled">
                                                             {/* <input style={{width:'18px', height:'18px'}} checked={this.state.acceptTerms} onChange={this.handleAcceptTermsChange} type="checkbox" className="form-check-input filled-in"></input> */}
                                                             <Checkbox className="custom-checkbox" checked={this.state.acceptTerms} onChange={this.handleAcceptTermsChange} />
-                                                            <label className="form-check-label form-label ml-2" style={{color: this.state.acceptTermsIsInvalid ? '#dc3545' : '#4c4c4c'}}>Acepto la consulta a mi Buró de Crédito</label>
+                                                            <label className="form-check-label form-label ml-2" style={{ color: this.state.acceptTermsIsInvalid ? '#dc3545' : '#4c4c4c' }}>Acepto la consulta a mi Buró de Crédito</label>
                                                         </div>
                                                     </div>
                                                 </div>
