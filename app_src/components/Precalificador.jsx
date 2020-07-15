@@ -17,7 +17,7 @@ import 'rc-checkbox/assets/index.css'
 
 class Precalificador extends Component {
     state = {
-        formController: 4,
+        formController: 1,
         totalFormSections: 7,
 
         // PART_1
@@ -107,10 +107,18 @@ class Precalificador extends Component {
     }
 
     componentDidMount() {
-        document.title = "Iniciar Sesión"
+        document.title = "Precalificador | Swaydo"
 
-        const { dispatch } = this.props
-        this.setState({ loading: false })
+        const { creditRequest } = this.props
+        const { email, phone, firstName, secondName, lastName, secondLastName, dateOfBirth, gender,
+            calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, creditType, creditAmount, propertyValue,
+            sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription } = creditRequest
+        this.setState({
+            email, phone, firstName, secondName, lastName, secondLastName, dateOfBirth, gender,
+            calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, creditType, creditAmount, propertyValue,
+            sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription,
+            loading: false
+        })
     }
 
     /* PART_1 */
@@ -259,16 +267,18 @@ class Precalificador extends Component {
 
     handleContinueBtn = (e) => {
         e.preventDefault()
+
         const {
             formController, totalFormSections,
             email, phone, confirmPhone, emailIsInvalid, phoneIsInvalid, confirmPhoneIsInvalid,
-            firstName, lastName, secondLastName, dateOfBirth, gender, firstNameIsInvalid, lastNameIsInvalid, secondLastNameIsInvalid,
+            firstName, secondName, lastName, secondLastName, dateOfBirth, gender, firstNameIsInvalid, lastNameIsInvalid, secondLastNameIsInvalid,
             calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, calleIsInvalid, numeroExtIsInvalid, municipioIsInvalid, postalCodeIsInvalid,
             creditType, creditAmount, propertyValue, creditTypeIsInvalid, creditAmountIsInvalid, propertyValueIsInvalid,
-            sourceOfResources, verifiableIncome, jobDescription, sourceOfResourcesIsInvalid, verifiableIncomeIsInvalid, unverifiableIncomeIsInvalid, jobDescriptionIsInvalid,
+            sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription, sourceOfResourcesIsInvalid, verifiableIncomeIsInvalid, unverifiableIncomeIsInvalid, jobDescriptionIsInvalid,
             nip, nipIsInvalid,
-
         } = this.state
+
+        const { dispatch } = this.props
 
         if (formController === totalFormSections) return
 
@@ -323,8 +333,19 @@ class Precalificador extends Component {
             return
         }
 
+        if (formController === 5) {
+            // Save Credit Request
+            const params = {
+                email, phone, firstName, secondName, lastName, secondLastName, dateOfBirth: dateOfBirth.toString(), gender,
+                calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, creditType, creditAmount, propertyValue,
+                sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription,
+            }
 
+            // API
 
+            // Save data locally
+            dispatch(saveCreditRequest(params))
+        }
 
         this.setState({ formController: formController + 1 })
     }
@@ -640,13 +661,9 @@ class Precalificador extends Component {
                                                     <label className="form-label">¿De dónde provienen la mayor parte de tus ingresos?<span className="form-required-symbol">*</span></label>
                                                     <select value={this.state.sourceOfResources} onChange={this.handleSourceOfResourcesChange} className={this.state.sourceOfResourcesIsInvalid ? 'form-control is-invalid' : 'form-control'}>
                                                         <option value="">Seleccionar</option>
-                                                        <option value="Compra de Casa">Compra de Casa</option>
-                                                        <option value="Construcción">Construcción</option>
-                                                        <option value="Remodelación">Remodelación</option>
-                                                        <option value="Liquidez">Liquidez</option>
-                                                        <option value="Terreno">Terreno</option>
-                                                        <option value="Terreno Construcción">Terreno+Construcción</option>
-                                                        <option value="Liquidez (Pago a pasivos)">Liquidez (Pago a pasivos)</option>
+                                                        <option value="Asalariado">Asalariado</option>
+                                                        <option value="Persona con Actividad Empresarial">Persona con Actividad Empresarial</option>
+                                                        <option value="Accionista">Accionista</option>
                                                     </select>
                                                     <div className="invalid-feedback">
                                                         {this.state.sourceOfResourcesErrorMsg}
@@ -768,9 +785,9 @@ class Precalificador extends Component {
     }
 }
 
-function mapStateToProps({ }) {
+function mapStateToProps({ creditRequest }) {
     return {
-
+        creditRequest,
     }
 }
 

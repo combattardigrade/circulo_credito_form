@@ -10,6 +10,7 @@ return array(
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Intl\\Idn\\' => array($vendorDir . '/symfony/polyfill-intl-idn'),
     'RcSimulacionClientPhp\\Client\\' => array($vendorDir . '/apihub-cdc/rc-simulacion-client-php/lib'),
+    'RCCFicoScorePLDSimulacion\\Client\\' => array($vendorDir . '/apihub-cdc/rcc-ficoscore-pld-simulacion-client-php/lib'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),

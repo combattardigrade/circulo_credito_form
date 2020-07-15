@@ -1,23 +1,24 @@
 <?php
+
 namespace RCCFicoScorePLDSimulacion\Client;
 
 use \RCCFicoScorePLDSimulacion\Client\Configuration;
 use \RCCFicoScorePLDSimulacion\Client\ApiException;
 use \RCCFicoScorePLDSimulacion\Client\ObjectSerializer;
 
-class ApiTest
+class ApiTest extends \PHPUnit_Framework_TestCase
 {
 
     public function setUp()
     {
         $handler = \GuzzleHttp\HandlerStack::create();
         $config = new \RCCFicoScorePLDSimulacion\Client\Configuration();
-        $config->setHost('https://services.circulodecredito.com.mx/sandbox/v1/rcc-ficoscore-pld');
+        $config->setHost('the_url');
 
         $client = new \GuzzleHttp\Client(['handler' => $handler, 'verify' => false]);
         $this->apiInstance = new \RCCFicoScorePLDSimulacion\Client\Api\RCCFicoScorePLDSimulacionApi($client, $config);
 
-        $this->x_api_key = "LSQiOWjqGQ6G7PD3xfCUtbNuDdMAx6T9";
+        $this->x_api_key = "your_api_key";
         $this->x_full_report = 'false';   
     }    
 
@@ -176,11 +177,3 @@ class ApiTest
         }         
     }    
 }
-
-$circulo = new ApiTest();
-// Setup
-$circulo->setUp();
-
-// Get report
-$circulo->testGetReporte();
-echo json_encode(array('status' => 'OK', 'message' => 'Hello World!'));

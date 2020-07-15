@@ -9,7 +9,7 @@ import Precalificador from './Precalificador'
 class AppRouter extends Component {
     render() {
         const { match, auth } = this.props
-        console.log(match)
+        
         return (
             <Fragment>                
                 <Route path='/simulador' component={Simulator} exact />

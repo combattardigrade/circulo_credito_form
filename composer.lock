@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4cd16dcb5044c91bd38300237f1d7b55",
+    "content-hash": "0fb48cabdcebc42d9bef6e10329d518b",
     "packages": [
         {
             "name": "apihub-cdc/rc-simulacion-client-php",
@@ -48,6 +48,49 @@
                 "sdk"
             ],
             "time": "2020-04-13T16:03:46+00:00"
+        },
+        {
+            "name": "apihub-cdc/rcc-ficoscore-pld-simulacion-client-php",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/APIHub-CdC/rcc-ficoscore-pld-simulacion-client-php.git",
+                "reference": "b34eccea2142c0b3caeb0276968da6ebe5587b4c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/APIHub-CdC/rcc-ficoscore-pld-simulacion-client-php/zipball/b34eccea2142c0b3caeb0276968da6ebe5587b4c",
+                "reference": "b34eccea2142c0b3caeb0276968da6ebe5587b4c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^6.2",
+                "monolog/monolog": "^1.24",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.12",
+                "phpunit/phpunit": "^4.8",
+                "squizlabs/php_codesniffer": "~2.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RCCFicoScorePLDSimulacion\\Client\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "homepage": "http://developer.circulodecredito.com.mx",
+            "keywords": [
+                "api",
+                "apihub",
+                "php",
+                "sdk"
+            ],
+            "time": "2020-03-18T22:04:33+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

@@ -26,6 +26,7 @@ class ComposerStaticInitdacece0a0e30a825ef8df5eff19cb78e
         'R' => 
         array (
             'RcSimulacionClientPhp\\Client\\' => 29,
+            'RCCFicoScorePLDSimulacion\\Client\\' => 33,
         ),
         'P' => 
         array (
@@ -60,6 +61,10 @@ class ComposerStaticInitdacece0a0e30a825ef8df5eff19cb78e
         'RcSimulacionClientPhp\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/apihub-cdc/rc-simulacion-client-php/lib',
+        ),
+        'RCCFicoScorePLDSimulacion\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/apihub-cdc/rcc-ficoscore-pld-simulacion-client-php/lib',
         ),
         'Psr\\Log\\' => 
         array (
