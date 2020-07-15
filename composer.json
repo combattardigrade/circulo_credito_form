@@ -2,6 +2,7 @@
     "name": "swaydo",
     "require": {
         "apihub-cdc/rc-simulacion-client-php": "^1.0",
-        "apihub-cdc/rcc-ficoscore-pld-simulacion-client-php": "^1.0"
+        "apihub-cdc/rcc-ficoscore-pld-simulacion-client-php": "^1.0",
+        "uwd/smsglobal-rest-api-v2": "*"
     }
 }

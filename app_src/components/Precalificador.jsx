@@ -8,6 +8,9 @@ import Loading from './Loading'
 // Actions
 import { saveCreditRequest } from '../actions/creditRequest'
 
+// API
+import { createCreditRequest } from '../utils/api'
+
 // Libraries
 import { Line } from 'rc-progress'
 import DatePicker from 'react-date-picker'
@@ -17,7 +20,7 @@ import 'rc-checkbox/assets/index.css'
 
 class Precalificador extends Component {
     state = {
-        formController: 1,
+        formController: 5,
         totalFormSections: 7,
 
         // PART_1
@@ -341,10 +344,20 @@ class Precalificador extends Component {
                 sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription,
             }
 
-            // API
-
             // Save data locally
             dispatch(saveCreditRequest(params))
+            console.log(params)
+            // API
+            createCreditRequest(params)
+                .then(data => data.text())
+                .then((res) => {
+                    console.log(res)
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+
         }
 
         this.setState({ formController: formController + 1 })

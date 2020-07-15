@@ -1,0 +1,153 @@
+<?php
+header('Content-Type: application/json');
+$_POST = json_decode(file_get_contents('php://input'), true);
+
+$firstName = System::mysqli_fix_string(@$_POST['firstName']);
+$secondName = System::mysqli_fix_string(@$_POST['secondName']);
+$lastName = System::mysqli_fix_string(@$_POST['lastName']);
+$secondLastName = System::mysqli_fix_string(@$_POST['secondLastName']);
+$email = System::mysqli_fix_string(@$_POST['email']);
+$phone = System::mysqli_fix_string(@$_POST['phone']);
+$gender = System::mysqli_fix_string(@$_POST['gender']);
+$dateOfBirth = System::mysqli_fix_string(@$_POST['dateOfBirth']);
+
+$calle = System::mysqli_fix_string(@$_POST['calle']);
+$numeroExt = System::mysqli_fix_string(@$_POST['numeroExt']);
+$colonia = System::mysqli_fix_string(@$_POST['colonia']);
+$municipio = System::mysqli_fix_string(@$_POST['municipio']);
+$entidadFederativa = System::mysqli_fix_string(@$_POST['entidadFederativa']);
+$postalCode = System::mysqli_fix_string(@$_POST['postalCode']);
+
+$creditAmount = System::mysqli_fix_string(@$_POST['creditAmount']);
+$creditType = System::mysqli_fix_string(@$_POST['creditType']);
+$propertyValue = System::mysqli_fix_string(@$_POST['propertyValue']);
+
+$sourceOfResources = System::mysqli_fix_string(@$_POST['sourceOfResources']);
+$unverifiableIncome = System::mysqli_fix_string(@$_POST['unverifiableIncome']);
+$verifiableIncome = System::mysqli_fix_string(@$_POST['verifiableIncome']);
+$jobDescription = System::mysqli_fix_string(@$_POST['jobDescription']);
+
+// Generate NIP
+$digits = 4;
+$nip = rand(pow(10, $digits-1), pow(10, $digits)-1);
+
+if (empty($firstName) || empty($lastName) || empty($secondLastName)) {
+    echo json_encode(array("status" => "ERROR", "message" => "Ingresa tu nombre completo"));
+    return;
+}
+
+if (empty($email)) {
+    echo json_encode(array("status" => "ERROR", "message" => "Ingresa un email válido"));
+    return;
+}
+
+if (empty($phone)) {
+    echo json_encode(array("status" => "ERROR", "message" => "Ingresa un número de teléfono válido"));
+    return;
+}
+
+if (empty($gender)) {
+    echo json_encode(array("status" => "ERROR", "message" => "Selecciona tu sexo"));
+    return;
+}
+
+if (empty($dateOfBirth)) {
+    echo json_encode(array("status" => "ERROR", "message" => "Ingresa tu fecha de nacimiento"));
+    return;
+}
+
+if (empty($calle) || empty($numeroExt) || empty($colonia) || empty($municipio) || empty($entidadFederativa) || empty($postalCode)) {
+    echo json_encode(array("status" => "ERROR", "message" => "Ingresa los datos completos de tu domicilio"));
+    return;
+}
+
+if (empty($creditAmount) || empty($creditType) || empty($propertyValue) ) {
+    echo json_encode(array("status" => "ERROR", "message" => "Ingresa todos los datos requeridos de la solicitud de crédito"));
+    return;
+}
+
+if (empty($sourceOfResources) || empty($unverifiableIncome) || empty($verifiableIncome) || empty($jobDescription)) {
+    echo json_encode(array("status" => "ERROR", "message" => "Completa tu información laboral"));
+    return;
+}
+
+$query = "CREATE TABLE IF NOT EXISTS credit_requests (
+        id int(11) NOT NULL AUTO_INCREMENT,
+        firstName varchar(255) DEFAULT NULL,
+        secondName varchar(255) DEFAULT NULL,
+        lastName varchar(255) DEFAULT NULL,
+        secondLastName varchar(255) DEFAULT NULL,
+        email varchar(255) DEFAULT NULL,
+        phone varchar(255) DEFAULT NULL,
+        gender varchar(255) DEFAULT NULL,
+        dateOfBirth varchar(255) DEFAULT NULL,
+        calle varchar(255) DEFAULT NULL,
+        numeroExt varchar(255) DEFAULT NULL,
+        colonia varchar(255) DEFAULT NULL,
+        municipio varchar(255) DEFAULT NULL,
+        entidadFederativa varchar(255) DEFAULT NULL,
+        postalCode varchar(255) DEFAULT NULL,
+        creditAmount varchar(255) DEFAULT NULL,
+        creditType varchar(255) DEFAULT NULL,
+        propertyValue varchar(255) DEFAULT NULL,
+        sourceOfResources varchar(255) DEFAULT NULL,
+        verifiableIncome varchar(255) DEFAULT NULL,
+        unverifiableIncome varchar(255) DEFAULT NULL,
+        jobDescription varchar(255) DEFAULT NULL,
+        nip varchar(255) DEFAULT NULL,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+        primary key (id)
+    )";
+
+// Create Table
+if (!$mysqli->query($query)) {
+    echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+    return;
+}
+
+$query = "INSERT INTO credit_requests (firstName, secondName, lastName, secondLastName, email, phone, gender, dateOfBirth, calle, numeroExt,colonia, municipio, entidadFederativa, postalCode, creditAmount, creditType, propertyValue, sourceOfResources,verifiableIncome, unverifiableIncome, jobDescription, nip) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+if (!($stmt = $mysqli->prepare($query))) {
+    echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+    return;
+}
+
+if (!$stmt->bind_param(
+    "ssssssssssssssssssssss",
+    $firstName,
+    $secondName,
+    $lastName,
+    $secondLastName,
+    $email,
+    $phone,
+    $gender,
+    $dateOfBirth,
+    $calle,
+    $numeroExt,
+    $colonia,
+    $municipio,
+    $entidadFederativa,
+    $postalCode,
+    $creditAmount,
+    $creditType,
+    $propertyValue,
+    $sourceOfResources,
+    $verifiableIncome,
+    $unverifiableIncome,
+    $jobDescription,
+    $nip
+)) {
+    echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+    return;
+}
+
+if (!$stmt->execute()) {
+    echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+    return;
+}
+
+
+
+echo json_encode(array("status" => "OK", "message" => "Solicitud de crédito creada correctamente"));
+return;
