@@ -9,3 +9,13 @@ export function createCreditRequest(params) {
         },
     })
 }
+
+export function checkCreditRequestNIP(params) {
+    return fetch(API + 'check_nip', {
+        method: 'POST',
+        body: JSON.stringify(params),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}

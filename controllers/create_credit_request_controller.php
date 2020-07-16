@@ -1,4 +1,5 @@
 <?php
+require_once(ROOT_DIR . '/classes/SMS.class.php');
 header('Content-Type: application/json');
 $_POST = json_decode(file_get_contents('php://input'), true);
 
@@ -147,7 +148,23 @@ if (!$stmt->execute()) {
     return;
 }
 
+// Credit Request ID
+$credit_request_id = mysqli_insert_id($mysqli);
 
+// Send SMS
+$message = "Por favor, ingresa el siguiente NIP en tu proceso de solicitud de credito con " . COMPANY_NAME . ": " . $nip;
+$origin = "SwayLending";
 
-echo json_encode(array("status" => "OK", "message" => "Solicitud de crédito creada correctamente"));
+// DEBUGGING
+// $response = SMS::send($phone, $message, $origin);
+// $status_code = $response->getStatusCode();
+
+// // SMS couldn't be sent
+// if($status_code != 200) {
+//     echo json_encode(array("status" => "ERROR", "message" => "Ocurrió un error al intentar enviar el mensaje SMS"));
+//     return;
+// }
+
+// OK response
+echo json_encode(array("status" => "OK", "payload" => array("credit_request_id" => $credit_request_id, "nip" => $nip),  "message" => "Solicitud de crédito creada correctamente"));
 return;

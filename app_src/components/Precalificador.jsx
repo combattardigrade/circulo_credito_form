@@ -6,10 +6,10 @@ import { connect } from 'react-redux'
 import Loading from './Loading'
 
 // Actions
-import { saveCreditRequest } from '../actions/creditRequest'
+import { saveCreditRequest, saveCreditRequestId, saveCreditRequestNIP } from '../actions/creditRequest'
 
 // API
-import { createCreditRequest } from '../utils/api'
+import { createCreditRequest, checkCreditRequestNIP } from '../utils/api'
 
 // Libraries
 import { Line } from 'rc-progress'
@@ -20,7 +20,7 @@ import 'rc-checkbox/assets/index.css'
 
 class Precalificador extends Component {
     state = {
-        formController: 5,
+        formController: 7,
         totalFormSections: 7,
 
         // PART_1
@@ -281,7 +281,7 @@ class Precalificador extends Component {
             nip, nipIsInvalid,
         } = this.state
 
-        const { dispatch } = this.props
+        const { creditRequest, dispatch } = this.props
 
         if (formController === totalFormSections) return
 
@@ -321,6 +321,23 @@ class Precalificador extends Component {
             return
         }
 
+        this.setState({ formController: formController + 1 })
+    }
+
+    // Check PART_5
+    handleSendNIPBtn = (e) => {
+        console.log('SEND_NIP_BTN')
+        e.preventDefault()
+
+        const {
+            formController, email, phone, firstName, secondName, lastName, secondLastName, dateOfBirth, gender,
+            calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, creditType, creditAmount, propertyValue,
+            sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription,
+            sourceOfResourcesIsInvalid, verifiableIncomeIsInvalid, jobDescriptionIsInvalid,
+        } = this.state
+
+        const { dispatch } = this.props
+
         // Check PART_5
         if (formController === 5 && (!sourceOfResources || !verifiableIncome || !jobDescription
             || sourceOfResourcesIsInvalid || verifiableIncomeIsInvalid || jobDescriptionIsInvalid)) {
@@ -330,40 +347,59 @@ class Precalificador extends Component {
             return
         }
 
-        // Check PART_6
+        // Save Credit Request
+        const params = {
+            email, phone, firstName, secondName, lastName, secondLastName, dateOfBirth: dateOfBirth.toString(), gender,
+            calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, creditType, creditAmount, propertyValue,
+            sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription,
+        }
+
+        // Save data locally
+        dispatch(saveCreditRequest(params))
+
+        // API
+        createCreditRequest(params)
+            .then(data => data.json())
+            .then((res) => {
+                console.log(res)
+                if (res.status === 'OK') {
+                    dispatch(saveCreditRequestId(res.payload.credit_request_id))
+                    dispatch(saveCreditRequestNIP(res.payload.nip))
+                    this.setState({ formController: formController + 1 })
+                    return
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                return
+            })
+    }
+
+    // Check PART_6
+    handleCheckNIPBtn = (e) => {
+        console.log('CHECK_PIN_BTN')
+        e.preventDefault()
+
+        const { formController, nip, nipIsInvalid, nipErrorMsg } = this.state
+        const { creditRequest, dispatch } = this.props
+
         if (formController === 6 && (!nip || nipIsInvalid)) {
             if (!nip) this.setState({ nipIsInvalid: true })
             return
         }
 
-        if (formController === 5) {
-            // Save Credit Request
-            const params = {
-                email, phone, firstName, secondName, lastName, secondLastName, dateOfBirth: dateOfBirth.toString(), gender,
-                calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, creditType, creditAmount, propertyValue,
-                sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription,
-            }
-
-            // Save data locally
-            dispatch(saveCreditRequest(params))
-            console.log(params)
-            // API
-            createCreditRequest(params)
-                .then(data => data.text())
-                .then((res) => {
-                    console.log(res)
-
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-
+        if (creditRequest.creditRequestNIP != nip) {
+            this.setState({ nipIsInvalid: true, nipErrorMsg: 'El NIP ingresado es incorrecto' })
+            return
         }
 
         this.setState({ formController: formController + 1 })
+        return
     }
 
+    // Check PART_7
     handleSubmitBtn = (e) => {
+        console.log('CONFIRM_NIP_BTN')
         e.preventDefault()
         const { confirmNIP, confirmNIPIsInvalid, acceptTerms, acceptTermsIsInvalid } = this.state
         // Check PART_7
@@ -372,6 +408,8 @@ class Precalificador extends Component {
             if (!acceptTerms) this.setState({ acceptTermsIsInvalid: true })
             return
         }
+
+
     }
 
     validateEmail(email) {
@@ -750,10 +788,14 @@ class Precalificador extends Component {
                                                                 {this.state.confirmNIPErrorMsg}
                                                             </div>
                                                         </div>
-                                                        <div className="form-check checkbox-warning-filled">
-                                                            {/* <input style={{width:'18px', height:'18px'}} checked={this.state.acceptTerms} onChange={this.handleAcceptTermsChange} type="checkbox" className="form-check-input filled-in"></input> */}
-                                                            <Checkbox className="custom-checkbox" checked={this.state.acceptTerms} onChange={this.handleAcceptTermsChange} />
-                                                            <label className="form-check-label form-label ml-2" style={{ color: this.state.acceptTermsIsInvalid ? '#dc3545' : '#4c4c4c' }}>Acepto la consulta a mi Buró de Crédito</label>
+                                                        <div className="row">
+                                                            <div className="col-1">
+                                                                <Checkbox className="custom-checkbox" checked={this.state.acceptTerms} onChange={this.handleAcceptTermsChange} />
+
+                                                            </div>
+                                                            <div className="col-10 text-justify">
+                                                                <label className="form-check-label form-label " style={{ color: this.state.acceptTermsIsInvalid ? '#dc3545' : '#4c4c4c' }}>Acepto que SwayDo.mx obtenga informacion relacionada a mi historial crediticio con el fin de obtener una Pre-Calificacion crediticia y conocer si soy sujeto de credito y el monto máximo que puedo solicitar.</label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -780,7 +822,7 @@ class Precalificador extends Component {
                                                         <button onClick={this.handleBackBtn} className="btn btn-light btn-continue">Previa</button>
                                                     </div>
                                                     <div className="text-center mt-4">
-                                                        <button onClick={this.handleContinueBtn} className="btn btn-light btn-continue">Próxima página</button>
+                                                        <button onClick={this.state.formController === 5 ? this.handleSendNIPBtn : this.state.formController === 6 ? this.handleCheckNIPBtn : this.handleContinueBtn} className="btn btn-light btn-continue">Próxima página</button>
                                                     </div>
                                                 </div>
                                                 :
