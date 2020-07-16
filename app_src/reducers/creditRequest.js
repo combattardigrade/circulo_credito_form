@@ -1,9 +1,36 @@
 import { SAVE_CREDIT_REQUEST, SAVE_CREDIT_REQUEST_ID, SAVE_CREDIT_REQUEST_NIP } from '../actions/creditRequest'
 
-export default function creditRequest(state = null, action) {
+const initialState = {
+    email: '',
+    phone: '',
+    firstName: '',
+    secondName: '',
+    lastName: '',
+    secondLastName: '',
+    dateOfBirth: '',
+    gender: '',
+    curp: '',
+    rfc: '',
+    calle: '',
+    numeroExt: '',
+    colonia: '',
+    municipio: '',
+    entidadFederativa: '',
+    postalCode: '',
+    creditType: '',
+    creditAmount: '',
+    propertyValue: '',
+    sourceOfResources: '',
+    verifiableIncome: '',
+    unverifiableIncome: '',
+    jobDescription: '',
+}
+
+export default function creditRequest(state = initialState, action) {
     switch(action.type) {
         case SAVE_CREDIT_REQUEST:
             return {
+                ...state,
                 ...action.request,
             }
         case SAVE_CREDIT_REQUEST_ID:

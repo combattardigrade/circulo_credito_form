@@ -11,6 +11,10 @@ $email = System::mysqli_fix_string(@$_POST['email']);
 $phone = System::mysqli_fix_string(@$_POST['phone']);
 $gender = System::mysqli_fix_string(@$_POST['gender']);
 $dateOfBirth = System::mysqli_fix_string(@$_POST['dateOfBirth']);
+$entidadNacimiento = System::mysqli_fix_string(@$_POST['entidadNacimiento']);
+
+$curp = System::mysqli_fix_string(@$_POST['curp']);
+$rfc = System::mysqli_fix_string(@$_POST['rfc']);
 
 $calle = System::mysqli_fix_string(@$_POST['calle']);
 $numeroExt = System::mysqli_fix_string(@$_POST['numeroExt']);
@@ -30,7 +34,7 @@ $jobDescription = System::mysqli_fix_string(@$_POST['jobDescription']);
 
 // Generate NIP
 $digits = 4;
-$nip = rand(pow(10, $digits-1), pow(10, $digits)-1);
+$nip = rand(pow(10, $digits - 1), pow(10, $digits) - 1);
 
 if (empty($firstName) || empty($lastName) || empty($secondLastName)) {
     echo json_encode(array("status" => "ERROR", "message" => "Ingresa tu nombre completo"));
@@ -57,12 +61,27 @@ if (empty($dateOfBirth)) {
     return;
 }
 
+if (empty($entidadNacimiento)) {
+    echo json_encode(array("status" => "ERROR", "message" => "Selecciona tu estado de nacimiento"));
+    return;
+}
+
+if (empty($curp)) {
+    echo json_encode(array("status" => "ERROR", "message" => "Ingresa tu CURP"));
+    return;
+}
+
+if (empty($rfc)) {
+    echo json_encode(array("status" => "ERROR", "message" => "Ingresa tu RFC"));
+    return;
+}
+
 if (empty($calle) || empty($numeroExt) || empty($colonia) || empty($municipio) || empty($entidadFederativa) || empty($postalCode)) {
     echo json_encode(array("status" => "ERROR", "message" => "Ingresa los datos completos de tu domicilio"));
     return;
 }
 
-if (empty($creditAmount) || empty($creditType) || empty($propertyValue) ) {
+if (empty($creditAmount) || empty($creditType) || empty($propertyValue)) {
     echo json_encode(array("status" => "ERROR", "message" => "Ingresa todos los datos requeridos de la solicitud de crédito"));
     return;
 }
@@ -82,6 +101,9 @@ $query = "CREATE TABLE IF NOT EXISTS credit_requests (
         phone varchar(255) DEFAULT NULL,
         gender varchar(255) DEFAULT NULL,
         dateOfBirth varchar(255) DEFAULT NULL,
+        entidadNacimiento varchar(255) DEFAULT NULL,
+        curp varchar(255) DEFAULT NULL,
+        rfc varchar(255) DEFAULT NULL,
         calle varchar(255) DEFAULT NULL,
         numeroExt varchar(255) DEFAULT NULL,
         colonia varchar(255) DEFAULT NULL,
@@ -107,7 +129,7 @@ if (!$mysqli->query($query)) {
     return;
 }
 
-$query = "INSERT INTO credit_requests (firstName, secondName, lastName, secondLastName, email, phone, gender, dateOfBirth, calle, numeroExt,colonia, municipio, entidadFederativa, postalCode, creditAmount, creditType, propertyValue, sourceOfResources,verifiableIncome, unverifiableIncome, jobDescription, nip) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+$query = "INSERT INTO credit_requests (firstName, secondName, lastName, secondLastName, email, phone, gender, dateOfBirth, entidadNacimiento, curp, rfc, calle, numeroExt,colonia, municipio, entidadFederativa, postalCode, creditAmount, creditType, propertyValue, sourceOfResources,verifiableIncome, unverifiableIncome, jobDescription, nip) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 if (!($stmt = $mysqli->prepare($query))) {
     echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
@@ -115,7 +137,7 @@ if (!($stmt = $mysqli->prepare($query))) {
 }
 
 if (!$stmt->bind_param(
-    "ssssssssssssssssssssss",
+    "sssssssssssssssssssssssss",
     $firstName,
     $secondName,
     $lastName,
@@ -124,6 +146,9 @@ if (!$stmt->bind_param(
     $phone,
     $gender,
     $dateOfBirth,
+    $entidadNacimiento,
+    $curp,
+    $rfc,
     $calle,
     $numeroExt,
     $colonia,

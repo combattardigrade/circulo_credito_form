@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux'
 import creditRequest from './creditRequest'
+import formController from './formController'
 import storage from 'redux-persist/lib/storage'
 
 const appReducer = combineReducers({    
     creditRequest,
+    formController,
 })
 
 const rootReducer = (state, action) => {    
