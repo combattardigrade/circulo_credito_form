@@ -23,6 +23,7 @@ class RFCCURPForm extends Component {
     }
 
     componentDidMount() {
+        console.log('mounted')
         const { creditRequest } = this.props
         let {
             firstName, secondName, lastName, secondLastName, dateOfBirth, gender, entidadNacimiento,
@@ -35,19 +36,21 @@ class RFCCURPForm extends Component {
         const nombre = firstName + ' ' + secondName
         let result
 
-        if (!curp) {
-            result = calcular(nombre, lastName, secondLastName, dateOfBirth, gender, entidadNacimiento)
-            curp = result.curp
-        }
+        // if (!curp) {
+        //     result = calcular(nombre, lastName, secondLastName, dateOfBirth, gender, entidadNacimiento)
+        //     curp = result.curp
+        // }
 
-        if (!rfc) {
-            result = calcular(nombre, lastName, secondLastName, dateOfBirth, gender, entidadNacimiento)
-            rfc = result.rfc
-        }
+        // if (!rfc) {
+        //     result = calcular(nombre, lastName, secondLastName, dateOfBirth, gender, entidadNacimiento)
+        //     rfc = result.rfc
+        // }
+
+        result = calcular(nombre, lastName, secondLastName, dateOfBirth, gender, entidadNacimiento)
 
         this.setState({
-            curp,
-            rfc,
+            curp: result.curp,
+            rfc: result.rfc,
             loading: false
         })
     }
@@ -55,7 +58,7 @@ class RFCCURPForm extends Component {
     handleRFCChange = (e) => {
         const rfc = e.target.value
 
-        if(rfc.length > 13) return
+        if (rfc.length > 13) return
 
         if (rfc.length !== 13) {
             this.setState({ rfcIsInvalid: true, rfcErrorMsg: 'El RFC debe contener 13 caracteres' })
@@ -68,8 +71,8 @@ class RFCCURPForm extends Component {
 
     handleCURPChange = (e) => {
         const curp = e.target.value
-        
-        if(curp.length > 18) return
+
+        if (curp.length > 18) return
 
         if (curp.length !== 18) {
             this.setState({ curpIsInvalid: true, curpErrorMsg: 'El CURP debe contener 18 caracteres' })
@@ -114,6 +117,8 @@ class RFCCURPForm extends Component {
 
         return (
             <Fragment>
+                <div className="form-description mt-2" style={{ color: 'rgb(0, 0, 128)', fontWeight: '400' }}>Por favor escribe de forma precisa los datos solicitados</div>
+                <div className="form-description mt-2" style={{ color: 'rgb(0, 0, 128)', fontWeight: '400' }}>Consulta tu CURP en el siguiente enlace: <a href="https://www.gob.mx/curp" target="_blank">https://www.gob.mx/curp</a></div>
                 <div className="form-group mt-4">
                     <label className="form-label">CURP<span className="form-required-symbol">*</span></label>
                     <input value={curp} onChange={this.handleCURPChange} type="text" className={curpIsInvalid ? 'form-control is-invalid' : 'form-control'} />

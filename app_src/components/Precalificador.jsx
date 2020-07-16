@@ -31,10 +31,10 @@ class Precalificador extends Component {
         document.title = "Precalificador | Swaydo"
         const { formController, dispatch } = this.props
 
-        // dispatch(setFormID(2))
+        dispatch(setFormID(3))
 
         this.setState({
-            // formController: 2,
+
             formController,
             loading: false,
         })

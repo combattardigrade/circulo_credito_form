@@ -8,6 +8,7 @@ const initialState = {
     lastName: '',
     secondLastName: '',
     dateOfBirth: '',
+    entidadNacimiento: '',
     gender: '',
     curp: '',
     rfc: '',
@@ -27,7 +28,7 @@ const initialState = {
 }
 
 export default function creditRequest(state = initialState, action) {
-    switch(action.type) {
+    switch (action.type) {
         case SAVE_CREDIT_REQUEST:
             return {
                 ...state,

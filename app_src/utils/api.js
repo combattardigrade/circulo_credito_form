@@ -1,3 +1,4 @@
+// const API = 'http://genesisblock.ddns.net/swaydo/api/'
 const API = 'http://localhost/swaydo/api/'
 
 export function createCreditRequest(params) {

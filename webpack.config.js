@@ -45,7 +45,7 @@ module.exports = {
         historyApiFallback: true,
         hot: true,
         inline: true,
-        host: 'localhost',
+        host: 'genesisblock.ddns.net',
         port: 8080,
         contentBase: path.join(__dirname, '/public'),
         watchContentBase: true,
