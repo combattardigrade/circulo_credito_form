@@ -11,20 +11,23 @@ class CreditTypeForm extends Component {
         creditType: '',
         creditAmount: '',
         propertyValue: '',
+        ownsProperty: '',
         creditTypeIsInvalid: false,
         creditAmountIsInvalid: false,
         propertyValueIsInvalid: false,
+        ownsPropertyIsInvalid: false,
         creditTypeErrorMsg: 'Este campo es obligatorio.',
         creditAmountErrorMsg: 'Este campo es obligatorio.',
         propertyValueErrorMsg: 'Este campo es obligatorio.',
+        ownsPropertyErrorMsg: 'Este campos es obligatorio.',
     }
 
     componentDidMount() {
         const { creditRequest } = this.props
-        const { creditType, creditAmount, propertyValue, } = creditRequest
+        const { creditType, creditAmount, propertyValue, ownsProperty } = creditRequest
 
         this.setState({
-            creditType, creditAmount, propertyValue,
+            creditType, creditAmount, propertyValue, ownsProperty,
             loading: false
         })
     }
@@ -56,26 +59,42 @@ class CreditTypeForm extends Component {
         this.setState({ propertyValue: e.target.value })
     }
 
+    handleOwnsPropertyChange = (e) => this.setState({ ownsProperty: e.target.value, ownsPropertyIsInvalid: e.target.value.length > 0 ? false : true  })
+
     handleContinueBtn = (e) => {
         e.preventDefault()
 
         const {
-            creditType, creditAmount, propertyValue, creditTypeIsInvalid, creditAmountIsInvalid, propertyValueIsInvalid
+            creditType, creditAmount, propertyValue, ownsProperty, ownsPropertyIsInvalid, creditTypeIsInvalid, creditAmountIsInvalid, propertyValueIsInvalid
         } = this.state
 
         const { dispatch } = this.props
 
-        // Check PART_5
-        if (!creditType || !creditAmount || !propertyValue || creditTypeIsInvalid || creditAmountIsInvalid || propertyValueIsInvalid) {
+        if (creditType !== 'Adquisición Tradicional' && creditType !== 'Construcción' && creditType != '') {
+            if (!creditType || !creditAmount || !ownsProperty || creditTypeIsInvalid || creditAmountIsInvalid || ownsPropertyIsInvalid) {
+                if (!creditType) this.setState({ creditTypeIsInvalid: true })
+                if (!creditAmount) this.setState({ creditAmountIsInvalid: true })
+                if (!ownsProperty) this.setState({ ownsPropertyIsInvalid: true })
+                return
+            }
+        } else if (creditType === 'Adquisición Tradicional') {
+            if (!creditType || !creditAmount || !propertyValue || creditTypeIsInvalid || creditAmountIsInvalid || propertyValueIsInvalid) {
+                if (!creditType) this.setState({ creditTypeIsInvalid: true })
+                if (!creditAmount) this.setState({ creditAmountIsInvalid: true })
+                if (!propertyValue) this.setState({ propertyValueIsInvalid: true })
+                return
+            }
+        } else {
             if (!creditType) this.setState({ creditTypeIsInvalid: true })
             if (!creditAmount) this.setState({ creditAmountIsInvalid: true })
+            if (!ownsProperty) this.setState({ ownsPropertyIsInvalid: true })
             if (!propertyValue) this.setState({ propertyValueIsInvalid: true })
             return
         }
 
         // save credit request form
         const params = {
-            creditType, creditAmount, propertyValue,
+            creditType, creditAmount, propertyValue, ownsProperty
         }
 
         dispatch(saveCreditRequest(params))
@@ -98,13 +117,14 @@ class CreditTypeForm extends Component {
                     <label className="form-label">Tipo de crédito<span className="form-required-symbol">*</span></label>
                     <select value={this.state.creditType} onChange={this.handleCreditTypeChange} className={this.state.creditTypeIsInvalid ? 'form-control is-invalid' : 'form-control'}>
                         <option value="">Seleccionar</option>
-                        <option value="Compra de Casa">Compra de Casa</option>
+                        <option value="Adquisición Tradicional">Adquisición Tradicional</option>
                         <option value="Construcción">Construcción</option>
                         <option value="Remodelación">Remodelación</option>
-                        <option value="Liquidez">Liquidez</option>
-                        <option value="Terreno">Terreno</option>
-                        <option value="Terreno Construcción">Terreno+Construcción</option>
-                        <option value="Liquidez (Pago a pasivos)">Liquidez (Pago a pasivos)</option>
+                        <option value="Liquidez (destino Libre)">Liquidez (destino Libre)</option>
+                        <option value="Liquidez (pago a pasivos)">Liquidez (pago a pasivos)</option>
+                        <option value="Mejora de Hipoteca">Mejora de Hipoteca</option>
+                        <option value="Terreno+Construccion">Terreno+Construccion</option>
+                        <option value="Cofinavit">Cofinavit</option>
                     </select>
                     <div className="invalid-feedback">
                         {this.state.creditTypeErrorMsg}
@@ -122,22 +142,43 @@ class CreditTypeForm extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="form-group">
-                    <label className="form-label">Valor de la propiedad<span className="form-required-symbol">*</span></label>
-                    <div className="input-group mb-3">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text">MXN</span>
+                {
+                    this.state.creditType !== 'Adquisición Tradicional' && this.state.creditType !== 'Construcción' && this.state.creditType != ''
+                        ?
+                        <div className="form-group mt-4">
+                            <label className="form-label">¿Usted es propietario de al menos una casa habitación?<span className="form-required-symbol">*</span></label>
+                            <select value={this.state.ownsProperty} onChange={this.handleOwnsPropertyChange} className={this.state.ownsPropertyIsInvalid ? 'form-control is-invalid' : 'form-control'}>
+                                <option value="">Seleccionar</option>
+                                <option value="Sí">Sí</option>
+                                <option value="No">No</option>
+                            </select>
+                            <div className="invalid-feedback">
+                                {this.state.ownsPropertyErrorMsg}
+                            </div>
                         </div>
-                        <input placeholder="0.0" value={this.state.propertyValue} onChange={this.handlePropertyValueChange} type="number" className={this.state.propertyValueIsInvalid ? 'form-control is-invalid' : 'form-control'} />
-                        <div className="invalid-feedback">
-                            {this.state.propertyValueErrorMsg}
-                        </div>
-                    </div>
-                </div>
+                        :
+                        this.state.creditType === 'Adquisición Tradicional'
+                            ?
+                            <div className="form-group">
+                                <label className="form-label">¿Cual es el valor aproximado de la propiedad que desea comprar?<span className="form-required-symbol">*</span></label>
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">MXN</span>
+                                    </div>
+                                    <input placeholder="0.0" value={this.state.propertyValue} onChange={this.handlePropertyValueChange} type="number" className={this.state.propertyValueIsInvalid ? 'form-control is-invalid' : 'form-control'} />
+                                    <div className="invalid-feedback">
+                                        {this.state.propertyValueErrorMsg}
+                                    </div>
+                                </div>
+                            </div>
+                            :
+                            null
+                }
+
                 <div className="text-center " style={{ display: 'flex', justifyContent: 'center' }}>
-                    <div className="text-center mt-4" style={{ marginRight: '10px' }}>
+                    {/* <div className="text-center mt-4" style={{ marginRight: '10px' }}>
                         <button onClick={this.handleBackBtn} className="btn btn-light btn-continue">Previa</button>
-                    </div>
+                    </div> */}
                     <div className="text-center mt-4">
                         <button onClick={this.handleContinueBtn} className="btn btn-light btn-continue">Próxima página</button>
                     </div>

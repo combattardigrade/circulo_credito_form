@@ -2,11 +2,8 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 
 // Actions
-import { saveCreditRequest, saveCreditRequestId, saveCreditRequestNIP } from '../actions/creditRequest'
+import { saveCreditRequest } from '../actions/creditRequest'
 import { nextFormController, backFormController } from '../actions/formController'
-
-// API
-import { createCreditRequest } from '../utils/api'
 
 class CreditTypeForm extends Component {
 
@@ -60,18 +57,11 @@ class CreditTypeForm extends Component {
     handleJobDescriptionChange = (e) => this.setState({ jobDescription: e.target.value, jobDescriptionIsInvalid: e.target.value.length > 0 ? false : true })
 
 
-    handleSendNIPBtn = (e) => {
-        console.log('SEND_NIP_BTN')
+    handleContinueBtn = (e) => {
+        console.log('CONTINUE_BTN')
         e.preventDefault()
 
-        const { creditRequest, dispatch } = this.props
-
-        const {
-            email, phone, firstName, secondName, lastName, secondLastName, dateOfBirth, gender, entidadNacimiento,
-            curp, rfc,
-            calle, numeroExt, colonia, municipio, entidadFederativa, postalCode,
-            creditType, creditAmount, propertyValue,
-        } = creditRequest
+        const { dispatch } = this.props
 
         const {
             sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription,
@@ -89,32 +79,14 @@ class CreditTypeForm extends Component {
 
         // Save Credit Request
         const params = {
-            email, phone, firstName, secondName, lastName, secondLastName, dateOfBirth: dateOfBirth.toString(), gender,
-            entidadNacimiento, curp, rfc,
-            calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, creditType, creditAmount, propertyValue,
             sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription,
         }
 
         // Save data locally
-        dispatch(saveCreditRequest({ params }))
+        dispatch(saveCreditRequest(params))
+        // next form controller
+        dispatch(nextFormController())
 
-        // API
-        createCreditRequest(params)
-            .then(data => data.json())
-            .then((res) => {
-                console.log(res)
-                if (res.status === 'OK') {
-                    dispatch(saveCreditRequestId(res.payload.credit_request_id))
-                    dispatch(saveCreditRequestNIP(res.payload.nip))
-                    // next form controller
-                    dispatch(nextFormController())
-                    return
-                }
-            })
-            .catch((err) => {
-                console.log(err)
-                return
-            })
     }
 
     handleBackBtn = (e) => {
@@ -176,9 +148,9 @@ class CreditTypeForm extends Component {
                         <button onClick={this.handleBackBtn} className="btn btn-light btn-continue">Previa</button>
                     </div>
                     <div className="text-center mt-4">
-                        <button onClick={this.handleSendNIPBtn} className="btn btn-light btn-continue">Próxima página</button>
+                        <button onClick={this.handleContinueBtn} className="btn btn-light btn-continue">Próxima página</button>
                     </div>
-                </div>                
+                </div>
             </Fragment>
         )
     }

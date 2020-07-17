@@ -26,6 +26,7 @@ $postalCode = System::mysqli_fix_string(@$_POST['postalCode']);
 $creditAmount = System::mysqli_fix_string(@$_POST['creditAmount']);
 $creditType = System::mysqli_fix_string(@$_POST['creditType']);
 $propertyValue = System::mysqli_fix_string(@$_POST['propertyValue']);
+$ownsProperty = System::mysqli_fix_string(@$_POST['ownsProperty']);
 
 $sourceOfResources = System::mysqli_fix_string(@$_POST['sourceOfResources']);
 $unverifiableIncome = System::mysqli_fix_string(@$_POST['unverifiableIncome']);
@@ -81,7 +82,7 @@ if (empty($calle) || empty($numeroExt) || empty($colonia) || empty($municipio) |
     return;
 }
 
-if (empty($creditAmount) || empty($creditType) || empty($propertyValue)) {
+if (empty($creditAmount) || empty($creditType)) {
     echo json_encode(array("status" => "ERROR", "message" => "Ingresa todos los datos requeridos de la solicitud de crédito"));
     return;
 }
@@ -113,6 +114,7 @@ $query = "CREATE TABLE IF NOT EXISTS credit_requests (
         creditAmount varchar(255) DEFAULT NULL,
         creditType varchar(255) DEFAULT NULL,
         propertyValue varchar(255) DEFAULT NULL,
+        ownsProperty varchar(255) DEFAULT NULL,
         sourceOfResources varchar(255) DEFAULT NULL,
         verifiableIncome varchar(255) DEFAULT NULL,
         unverifiableIncome varchar(255) DEFAULT NULL,
@@ -129,7 +131,7 @@ if (!$mysqli->query($query)) {
     return;
 }
 
-$query = "INSERT INTO credit_requests (firstName, secondName, lastName, secondLastName, email, phone, gender, dateOfBirth, entidadNacimiento, curp, rfc, calle, numeroExt,colonia, municipio, entidadFederativa, postalCode, creditAmount, creditType, propertyValue, sourceOfResources,verifiableIncome, unverifiableIncome, jobDescription, nip) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+$query = "INSERT INTO credit_requests (firstName, secondName, lastName, secondLastName, email, phone, gender, dateOfBirth, entidadNacimiento, curp, rfc, calle, numeroExt,colonia, municipio, entidadFederativa, postalCode, creditAmount, creditType, propertyValue, ownsProperty, sourceOfResources,verifiableIncome, unverifiableIncome, jobDescription, nip) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 if (!($stmt = $mysqli->prepare($query))) {
     echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
@@ -137,7 +139,7 @@ if (!($stmt = $mysqli->prepare($query))) {
 }
 
 if (!$stmt->bind_param(
-    "sssssssssssssssssssssssss",
+    "ssssssssssssssssssssssssss",
     $firstName,
     $secondName,
     $lastName,
@@ -157,6 +159,7 @@ if (!$stmt->bind_param(
     $postalCode,
     $creditAmount,
     $creditType,
+    $ownsProperty,
     $propertyValue,
     $sourceOfResources,
     $verifiableIncome,

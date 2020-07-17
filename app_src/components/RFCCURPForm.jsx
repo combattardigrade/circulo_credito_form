@@ -23,8 +23,8 @@ class RFCCURPForm extends Component {
     }
 
     componentDidMount() {
-        console.log('mounted')
         const { creditRequest } = this.props
+
         let {
             firstName, secondName, lastName, secondLastName, dateOfBirth, gender, entidadNacimiento,
             curp, rfc

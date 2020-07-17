@@ -21,6 +21,7 @@ const initialState = {
     creditType: '',
     creditAmount: '',
     propertyValue: '',
+    ownsProperty: '',
     sourceOfResources: '',
     verifiableIncome: '',
     unverifiableIncome: '',

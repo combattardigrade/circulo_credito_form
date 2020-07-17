@@ -1,9 +1,12 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { saveCreditRequest, } from '../actions/creditRequest'
-import { nextFormController } from '../actions/formController'
 
+// Actions
+import { saveCreditRequest, saveCreditRequestId, saveCreditRequestNIP } from '../actions/creditRequest'
+import { nextFormController, backFormController } from '../actions/formController'
 
+// API
+import { createCreditRequest } from '../utils/api'
 
 class LeadForm extends Component {
 
@@ -65,16 +68,23 @@ class LeadForm extends Component {
         this.setState({ confirmPhone: e.target.value })
     }
 
-    handleContinueBtn = (e) => {
+    handleSendNIPBtn = (e) => {
         e.preventDefault()
+
+        const { creditRequest, dispatch } = this.props
+
+        const {
+            firstName, secondName, lastName, secondLastName, dateOfBirth, gender, entidadNacimiento,
+            curp, rfc,
+            calle, numeroExt, colonia, municipio, entidadFederativa, postalCode,
+            creditType, creditAmount, propertyValue, ownsProperty,
+            sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription,
+        } = creditRequest
 
         const {
             email, phone, confirmPhone, emailIsInvalid, phoneIsInvalid, confirmPhoneIsInvalid
         } = this.state
 
-        const { dispatch } = this.props
-
-        // Check PART_1
         if (!email || !phone || !confirmPhone || emailIsInvalid || phoneIsInvalid || confirmPhoneIsInvalid) {
             if (!email) this.setState({ emailIsInvalid: true })
             if (!phone) this.setState({ phoneIsInvalid: true })
@@ -82,15 +92,39 @@ class LeadForm extends Component {
             return
         }
 
-        // save credit request form
+        // Save Credit Request
         const params = {
-            email, phone,
+            email, phone, firstName, secondName, lastName, secondLastName, dateOfBirth: dateOfBirth.toString(), gender,
+            entidadNacimiento, curp, rfc,
+            calle, numeroExt, colonia, municipio, entidadFederativa, postalCode, creditType, creditAmount, propertyValue, ownsProperty,
+            sourceOfResources, verifiableIncome, unverifiableIncome, jobDescription,
         }
 
         dispatch(saveCreditRequest(params))
 
-        // next form controller
-        dispatch(nextFormController())
+        // API
+        createCreditRequest(params)
+            .then(data => data.json())
+            .then((res) => {
+                console.log(res)
+                if (res.status === 'OK') {
+                    dispatch(saveCreditRequestId(res.payload.credit_request_id))
+                    dispatch(saveCreditRequestNIP(res.payload.nip))
+                    // next form controller
+                    dispatch(nextFormController())
+                    return
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                return
+            })
+    }
+
+    handleBackBtn = (e) => {
+        e.preventDefault()
+        const { dispatch } = this.props
+        dispatch(backFormController())
     }
 
     validateEmail(email) {
@@ -104,7 +138,7 @@ class LeadForm extends Component {
             <Fragment>
                 <div className="mt-2" style={{ color: '#000080' }}>Descubre en minutos si eres sujeto de crédito y el monto máximo que se puede prestar así como la tasa de interés disponible para tí.</div>
                 <div className="form-description mt-4">-Recibirás una Resolución de acuerdo con los datos declarados</div>
-                <div className="form-description mt-2">-En caso de estar interesado, podrás continuar el proceso en línea o en las oficinas de SwayDo.mx de tu ciudad, en un proceso presencial.</div>
+                <div className="form-description mt-2">-En caso de estar interesado, podrás continuar el proceso en línea o en las oficinas de SwayLending de tu ciudad, en un proceso presencial.</div>
                 <div className="form-description mt-2">-Esta pre-calificación no supone costo o compromiso alguno para usted.</div>
                 <div className="mt-4" style={{ color: '#4c4c4c', fontStyle: 'italic', fontFamily: "Open Sans, sans-serif" }}>Por favor ingresa los siguientes datos:</div>
 
@@ -133,8 +167,13 @@ class LeadForm extends Component {
                         </div>
                     )
                 }
-                <div className="text-center mt-4">
-                    <button onClick={this.handleContinueBtn} className="btn btn-light btn-continue">Próxima página</button>
+                <div className="text-center " style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div className="text-center mt-4" style={{ marginRight: '10px' }}>
+                        <button onClick={this.handleBackBtn} className="btn btn-light btn-continue">Previa</button>
+                    </div>
+                    <div className="text-center mt-4">
+                        <button onClick={this.handleSendNIPBtn} className="btn btn-light btn-continue">Próxima página</button>
+                    </div>
                 </div>
             </Fragment>
         )

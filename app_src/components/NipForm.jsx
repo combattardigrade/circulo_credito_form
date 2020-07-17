@@ -12,7 +12,7 @@ class NipForm extends Component {
     }
 
     componentDidMount() {
-        document.title = "Autorización Círculo de Crédito | Swaydo"
+        document.title = "Autorización Círculo de Crédito | SwayLending"
         this.setState({ loading: false })
     }
 

@@ -28,10 +28,10 @@ class Precalificador extends Component {
     }
 
     componentDidMount() {
-        document.title = "Precalificador | Swaydo"
+        document.title = "Precalificador | SwayLending"
         const { formController, dispatch } = this.props
 
-        dispatch(setFormID(3))
+        dispatch(setFormID(6))
 
         this.setState({
 
@@ -59,12 +59,12 @@ class Precalificador extends Component {
                             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px 20px 20px 20px' }}>
                                 <div className="form-subtitle">
                                     {
-                                        formController === 1 ? 'Pre-calificación' :
+                                        formController === 1 ? 'Datos del Crédito' :
                                             formController === 2 ? 'Datos Personales' :
                                                 formController === 3 ? 'Confirma tu CURP y RFC' :
                                                     formController === 4 ? 'Dirección' :
-                                                        formController === 5 ? 'Datos del Crédito' :
-                                                            formController === 6 ? 'Tipo de Actividad' :
+                                                        formController === 5 ? 'Tipo de Actividad' :
+                                                            formController === 6 ? 'Pre-calificación' :
                                                                 formController === 7 ? 'Autorización Círculo de Crédito' :
                                                                     formController === 8 ? 'Autorización de Consulta de Historial Crediticio' : ''
                                     }
@@ -77,23 +77,23 @@ class Precalificador extends Component {
                                 <div className="form-title" style={{ marginTop: '5px' }}>
 
                                     {
-                                        formController === 1 ? 'Pre-calificador Hipotecario' :
+                                        formController === 1 ? 'Datos del Crédito' :
                                             formController === 2 ? 'Datos Personales' :
                                                 formController === 3 ? 'Confirma tu CURP y RFC' :
                                                     formController === 4 ? 'Dirección' :
-                                                        formController === 5 ? 'Datos del Crédito' :
-                                                            formController === 6 ? 'Tipo de Actividad' :
+                                                        formController === 5 ? 'Tipo de Actividad' :
+                                                            formController === 6 ? 'Pre-calificador Hipotecario' :
                                                                 formController === 7 ? 'Autorización Círculo de Crédito' :
                                                                     formController === 8 ? 'Autorización de Consulta de Historial Crediticio' : ''
                                     }
                                 </div>
                                 <form action="">
-                                    {formController === 1 && < LeadForm />}
+                                    {formController === 1 && <CreditTypeForm />}
                                     {formController === 2 && <UserIdentificationForm />}
                                     {formController === 3 && <RFCCURPForm />}
                                     {formController === 4 && <AddressForm />}
-                                    {formController === 5 && <CreditTypeForm />}
-                                    {formController === 6 && <UserIncomeForm />}
+                                    {formController === 5 && <UserIncomeForm />}
+                                    {formController === 6 && <LeadForm />}
                                     {formController === 7 && <NipForm />}
                                     {formController === 8 && <ConfirmNipForm />}
                                 </form>

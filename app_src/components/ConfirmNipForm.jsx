@@ -19,7 +19,7 @@ class ConfirmNipForm extends Component {
     }
 
     componentDidMount() {
-        document.title = "Autorización Círculo de Crédito | Swaydo"
+        document.title = "Autorización Círculo de Crédito | SwayLending"
         this.setState({ loading: false })
     }
 
@@ -47,8 +47,6 @@ class ConfirmNipForm extends Component {
             if (!acceptTerms) this.setState({ acceptTermsIsInvalid: true })
             return
         }
-
-
     }
 
     render() {
@@ -69,7 +67,7 @@ class ConfirmNipForm extends Component {
                                 <Checkbox className="custom-checkbox" checked={this.state.acceptTerms} onChange={this.handleAcceptTermsChange} />
                             </div>
                             <div className="col-10 text-justify">
-                                <label className="form-check-label form-label " style={{ color: this.state.acceptTermsIsInvalid ? '#dc3545' : '#4c4c4c' }}>Acepto que SwayDo.mx obtenga informacion relacionada a mi historial crediticio con el fin de obtener una Pre-Calificacion crediticia y conocer si soy sujeto de credito y el monto máximo que puedo solicitar.</label>
+                                <label className="form-check-label form-label " style={{ color: this.state.acceptTermsIsInvalid ? '#dc3545' : '#4c4c4c' }}>Acepto que SwayLending obtenga informacion relacionada a mi historial crediticio con el fin de obtener una Pre-Calificacion crediticia y conocer si soy sujeto de credito y el monto máximo que puedo solicitar.</label>
                             </div>
                         </div>
                     </div>
