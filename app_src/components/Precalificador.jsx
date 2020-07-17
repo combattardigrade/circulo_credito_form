@@ -72,7 +72,7 @@ class Precalificador extends Component {
                                 <div className="form-subtitle">{progress}%</div>
                             </div>
 
-                            <img className="card-img-top" src="https://s3-us-west-2.amazonaws.com/userdata123/www/imagefields/59450/59450072.jpg?_=1594321348260" />
+                            <img className="card-img-top" src={process.env.HOST + 'public/images/banda_hd.jpg'} />
                             <div className="card-body">
                                 <div className="form-title" style={{ marginTop: '5px' }}>
 
