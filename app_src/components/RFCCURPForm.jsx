@@ -46,13 +46,20 @@ class RFCCURPForm extends Component {
         //     rfc = result.rfc
         // }
 
-        result = calcular(nombre, lastName, secondLastName, dateOfBirth, gender, entidadNacimiento)
+        if (firstName && lastName && secondLastName && dateOfBirth && gender && entidadNacimiento) {
+            result = calcular(nombre, lastName, secondLastName, dateOfBirth, gender, entidadNacimiento)
 
-        this.setState({
-            curp: result.curp,
-            rfc: result.rfc,
-            loading: false
-        })
+            this.setState({
+                curp: result.curp,
+                rfc: result.rfc,
+                loading: false
+            })
+
+            return
+        }
+
+        this.setState({ curp: '', rfc: '', loading: false })
+
     }
 
     handleRFCChange = (e) => {

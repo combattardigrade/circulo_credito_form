@@ -22,7 +22,7 @@ class App extends Component {
         const { loading, } = this.props
 
         return (
-            <Router basename='/swaydo'>
+            <Router basename='/swaylending'>
                 <Fragment>
                     {
                         loading === true

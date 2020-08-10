@@ -8,6 +8,7 @@ import UserIdentificationForm from './UserIdentificationForm'
 import AddressForm from './AddressForm'
 import RFCCURPForm from './RFCCURPForm'
 import CreditTypeForm from './CreditTypeForm'
+import CreditAmountForm from './CreditAmountForm'
 import UserIncomeForm from './UserIncomeForm'
 import NipForm from './NipForm'
 import ConfirmNipForm from './ConfirmNipForm'
@@ -31,7 +32,7 @@ class Precalificador extends Component {
         document.title = "Precalificador | SwayLending"
         const { formController, dispatch } = this.props
 
-        dispatch(setFormID(6))
+        // dispatch(setFormID(1))
 
         this.setState({
 
@@ -59,14 +60,15 @@ class Precalificador extends Component {
                             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px 20px 20px 20px' }}>
                                 <div className="form-subtitle">
                                     {
-                                        formController === 1 ? 'Datos del Crédito' :
-                                            formController === 2 ? 'Datos Personales' :
-                                                formController === 3 ? 'Confirma tu CURP y RFC' :
-                                                    formController === 4 ? 'Dirección' :
-                                                        formController === 5 ? 'Tipo de Actividad' :
-                                                            formController === 6 ? 'Pre-calificación' :
-                                                                formController === 7 ? 'Autorización Círculo de Crédito' :
-                                                                    formController === 8 ? 'Autorización de Consulta de Historial Crediticio' : ''
+                                        formController === 1 ? 'Pre-calificación' :
+                                            formController === 2 ? 'Monto del Crédito' :
+                                                formController === 3 ? 'Datos Personales' :
+                                                    formController === 4 ? 'Confirma tu CURP y RFC' :
+                                                        formController === 5 ? 'Dirección' :
+                                                            formController === 6 ? 'Tipo de Actividad' :
+                                                                formController === 7 ? 'Datos de Contacto' :
+                                                                    formController === 8 ? 'Autorización Círculo de Crédito' :
+                                                                        formController === 9 ? 'Autorización de Consulta de Historial Crediticio' : ''
                                     }
                                 </div>
                                 <div className="form-subtitle">{progress}%</div>
@@ -75,27 +77,28 @@ class Precalificador extends Component {
                             <img className="card-img-top" src={process.env.HOST + 'public/images/banda_hd.jpg'} />
                             <div className="card-body">
                                 <div className="form-title" style={{ marginTop: '5px' }}>
-
                                     {
-                                        formController === 1 ? 'Datos del Crédito' :
-                                            formController === 2 ? 'Datos Personales' :
-                                                formController === 3 ? 'Confirma tu CURP y RFC' :
-                                                    formController === 4 ? 'Dirección' :
-                                                        formController === 5 ? 'Tipo de Actividad' :
-                                                            formController === 6 ? 'Pre-calificador Hipotecario' :
-                                                                formController === 7 ? 'Autorización Círculo de Crédito' :
-                                                                    formController === 8 ? 'Autorización de Consulta de Historial Crediticio' : ''
+                                        formController === 1 ? 'Pre-calificador Hipotecario' :
+                                            formController === 2 ? 'Monto del Crédito' :
+                                                formController === 3 ? 'Datos Personales' :
+                                                    formController === 4 ? 'Confirma tu CURP y RFC' :
+                                                        formController === 5 ? 'Dirección' :
+                                                            formController === 6 ? 'Tipo de Actividad' :
+                                                                formController === 7 ? 'Datos de Contacto' :
+                                                                    formController === 8 ? 'Autorización Círculo de Crédito' :
+                                                                        formController === 9 ? 'Autorización de Consulta de Historial Crediticio' : ''
                                     }
                                 </div>
                                 <form action="">
                                     {formController === 1 && <CreditTypeForm />}
-                                    {formController === 2 && <UserIdentificationForm />}
-                                    {formController === 3 && <RFCCURPForm />}
-                                    {formController === 4 && <AddressForm />}
-                                    {formController === 5 && <UserIncomeForm />}
-                                    {formController === 6 && <LeadForm />}
-                                    {formController === 7 && <NipForm />}
-                                    {formController === 8 && <ConfirmNipForm />}
+                                    {formController === 2 && <CreditAmountForm />}
+                                    {formController === 3 && <UserIdentificationForm />}
+                                    {formController === 4 && <RFCCURPForm />}
+                                    {formController === 5 && <AddressForm />}
+                                    {formController === 6 && <UserIncomeForm />}
+                                    {formController === 7 && <LeadForm />}
+                                    {formController === 8 && <NipForm />}
+                                    {formController === 9 && <ConfirmNipForm />}
                                 </form>
                             </div>
                         </div>
