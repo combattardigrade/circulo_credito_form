@@ -58,7 +58,7 @@
     "downshift": "3.4.2",
     "ejs": "^3.1.3",
     "email-validator": "2.0.4",
-    "express": "4.16.4",
+    "express": "4.17.3",
     "express-fileupload": "1.1.6-alpha.4",
     "express-jwt": "5.3.1",
     "express-recaptcha": "5.0.1",
